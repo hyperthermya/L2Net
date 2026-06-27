@@ -23,22 +23,27 @@ namespace L2_login
             int pipe = 0, oldpipe = 0;
             //ID
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             ID = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Name
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { Name = oldpipe <= inp.Length ? inp.Substring(oldpipe) : ""; return; }
             Name = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             //Description
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { Description = oldpipe <= inp.Length ? inp.Substring(oldpipe) : ""; return; }
             Description = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             //Blue
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Blue = byte.Parse(inp.Substring(oldpipe, pipe - oldpipe), System.Globalization.NumberStyles.HexNumber);
             oldpipe = pipe + 1;
             //Green
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Green = byte.Parse(inp.Substring(oldpipe, pipe - oldpipe), System.Globalization.NumberStyles.HexNumber);
             oldpipe = pipe + 1;
             //Red

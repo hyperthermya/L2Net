@@ -1,6 +1,6 @@
 using System;
 using System.Drawing;
-using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Threading;
 using System.IO;
@@ -58,7 +58,7 @@ namespace L2_login
         private Button button_oog_create;
         private Label label_oog_loginport;
 
-        public ArrayList blowfish_list = new ArrayList();
+        public List<string> blowfish_list = new List<string>();
         private Panel panel_advanced;
         private CheckBox checkBox_game_proxy;
         private TextBox textBox_socks_password;
@@ -84,7 +84,7 @@ namespace L2_login
         private CheckBox checkBox_LS_GS_Same_IP;
         private CheckBox checkBox_ManualGK;
         private ComboBox comboBox_gsList;
-        public ArrayList loginserver_list = new ArrayList();
+        public List<string> loginserver_list = new List<string>();
         private ListView listView_chars;
         private ColumnHeader columnHeader10;
         private ColumnHeader columnHeader11;
@@ -161,10 +161,13 @@ namespace L2_login
         private Label label_IG_pin;
         private TextBox textBox_IG_pin;
         private CheckBox checkBox_security_old_client;
-        private RadioButton radioButton_c17;
-        private RadioButton radioButton_c18;
         private RadioButton radioButton_c14;
-        public ArrayList gameserver_list = new ArrayList();
+        private RadioButton radioButton_cCT1;
+        private RadioButton radioButton_cCT1_5;
+        private RadioButton radioButton_cCT2_1;
+        private RadioButton radioButton_cCT2_2;
+        private RadioButton radioButton_cCT2_3;
+        public List<string> gameserver_list = new List<string>();
 
         public Login(Form pf)
         {
@@ -173,6 +176,7 @@ namespace L2_login
             //
             InitializeComponent();
             Shown += new EventHandler(Login_Shown);
+            FormClosing += new System.Windows.Forms.FormClosingEventHandler((s, e) => SaveLoginState());
             add_controls_to_array();
             checkBox_advanced.Enabled = true;
             checkBox_Unknown_Blowfish.Enabled = true;
@@ -192,11 +196,20 @@ namespace L2_login
                 case 14: // High Five
                     radioButton_c14.Checked = true;
                     break;
-                case 17: // Glory Days
-                    radioButton_c17.Checked = true;
+                case 7:
+                    radioButton_cCT1.Checked = true;
                     break;
-                case 18:
-                    radioButton_c18.Checked = true;
+                case 8:
+                    radioButton_cCT1_5.Checked = true;
+                    break;
+                case 9:
+                    radioButton_cCT2_1.Checked = true;
+                    break;
+                case 10:
+                    radioButton_cCT2_2.Checked = true;
+                    break;
+                case 11:
+                    radioButton_cCT2_3.Checked = true;
                     break;
                 default:
                     radioButton_c14.Checked = true;
@@ -209,6 +222,8 @@ namespace L2_login
             textBox_ig_login_port.Text = Globals.pre_login_port;
             textBox_local_ip.Text = Globals.pre_IG_listen_ip;
             textBox_local_port.Text = Globals.pre_IG_listen_port;
+
+            LoadLoginState();
 
 #if DEBUG
             textBox_game_ip.Text = Globals.pre_gameserver_override_ip;
@@ -509,8 +524,11 @@ namespace L2_login
         {
             this.panel_select = new Panel();
             this.radioButton_c14 = new RadioButton();
-            this.radioButton_c18 = new RadioButton();
-            this.radioButton_c17 = new RadioButton();
+            this.radioButton_cCT1 = new RadioButton();
+            this.radioButton_cCT1_5 = new RadioButton();
+            this.radioButton_cCT2_1 = new RadioButton();
+            this.radioButton_cCT2_2 = new RadioButton();
+            this.radioButton_cCT2_3 = new RadioButton();
             this.checkBox_LS_GS_Same_IP = new CheckBox();
             this.checkBox_Unknown_Blowfish = new CheckBox();
             this.panel_advanced = new Panel();
@@ -665,8 +683,11 @@ namespace L2_login
             // panel_select
             // 
             this.panel_select.Controls.Add(this.radioButton_c14);
-            this.panel_select.Controls.Add(this.radioButton_c18);
-            this.panel_select.Controls.Add(this.radioButton_c17);
+            this.panel_select.Controls.Add(this.radioButton_cCT1);
+            this.panel_select.Controls.Add(this.radioButton_cCT1_5);
+            this.panel_select.Controls.Add(this.radioButton_cCT2_1);
+            this.panel_select.Controls.Add(this.radioButton_cCT2_2);
+            this.panel_select.Controls.Add(this.radioButton_cCT2_3);
             this.panel_select.Controls.Add(this.checkBox_LS_GS_Same_IP);
             this.panel_select.Controls.Add(this.checkBox_Unknown_Blowfish);
             this.panel_select.Controls.Add(this.panel_advanced);
@@ -683,38 +704,75 @@ namespace L2_login
             this.panel_select.Name = "panel_select";
             this.panel_select.Size = new Size(607, 445);
             this.panel_select.TabIndex = 0;
-            // 
+            //
+            // radioButton_cCT1
+            //
+            this.radioButton_cCT1.Location = new System.Drawing.Point(500, 20);
+            this.radioButton_cCT1.Name = "radioButton_cCT1";
+            this.radioButton_cCT1.Size = new Size(135, 18);
+            this.radioButton_cCT1.TabIndex = 42;
+            this.radioButton_cCT1.Text = "CT1";
+            this.radioButton_cCT1.UseVisualStyleBackColor = true;
+            //
+            // radioButton_cCT1_5
+            //
+            this.radioButton_cCT1_5.Location = new System.Drawing.Point(500, 43);
+            this.radioButton_cCT1_5.Name = "radioButton_cCT1_5";
+            this.radioButton_cCT1_5.Size = new Size(135, 18);
+            this.radioButton_cCT1_5.TabIndex = 43;
+            this.radioButton_cCT1_5.Text = "CT1.5";
+            this.radioButton_cCT1_5.UseVisualStyleBackColor = true;
+            //
+            // radioButton_cCT2_1
+            //
+            this.radioButton_cCT2_1.Location = new System.Drawing.Point(500, 66);
+            this.radioButton_cCT2_1.Name = "radioButton_cCT2_1";
+            this.radioButton_cCT2_1.Size = new Size(135, 18);
+            this.radioButton_cCT2_1.TabIndex = 44;
+            this.radioButton_cCT2_1.Text = "CT2.1";
+            this.radioButton_cCT2_1.UseVisualStyleBackColor = true;
+            //
+            // radioButton_cCT2_2
+            //
+            this.radioButton_cCT2_2.Location = new System.Drawing.Point(500, 89);
+            this.radioButton_cCT2_2.Name = "radioButton_cCT2_2";
+            this.radioButton_cCT2_2.Size = new Size(135, 18);
+            this.radioButton_cCT2_2.TabIndex = 45;
+            this.radioButton_cCT2_2.Text = "CT2.2";
+            this.radioButton_cCT2_2.UseVisualStyleBackColor = true;
+            //
+            // radioButton_cCT2_3
+            //
+            this.radioButton_cCT2_3.Location = new System.Drawing.Point(500, 112);
+            this.radioButton_cCT2_3.Name = "radioButton_cCT2_3";
+            this.radioButton_cCT2_3.Size = new Size(135, 18);
+            this.radioButton_cCT2_3.TabIndex = 46;
+            this.radioButton_cCT2_3.Text = "CT2.3";
+            this.radioButton_cCT2_3.UseVisualStyleBackColor = true;
+            //
             // radioButton_c14
-            // 
+            //
             this.radioButton_c14.AutoSize = true;
             this.radioButton_c14.Checked = true;
-            this.radioButton_c14.Location = new System.Drawing.Point(303, 20);
+            this.radioButton_c14.Location = new System.Drawing.Point(500, 135);
             this.radioButton_c14.Name = "radioButton_c14";
             this.radioButton_c14.Size = new Size(70, 17);
-            this.radioButton_c14.TabIndex = 42;
+            this.radioButton_c14.TabIndex = 47;
             this.radioButton_c14.TabStop = true;
             this.radioButton_c14.Text = "High Five";
             this.radioButton_c14.TextAlign = ContentAlignment.TopRight;
             this.radioButton_c14.UseVisualStyleBackColor = true;
-            // 
-            // radioButton_c18
-            // 
-            this.radioButton_c18.Location = new System.Drawing.Point(303, 67);
-            this.radioButton_c18.Name = "radioButton_c18";
-            this.radioButton_c18.Size = new Size(135, 18);
-            this.radioButton_c18.TabIndex = 44;
-            this.radioButton_c18.Text = "Lindvior";
-            this.radioButton_c18.Visible = false;
-            // 
-            // radioButton_c17
-            // 
-            this.radioButton_c17.Location = new System.Drawing.Point(303, 43);
-            this.radioButton_c17.Name = "radioButton_c17";
-            this.radioButton_c17.Size = new Size(135, 18);
-            this.radioButton_c17.TabIndex = 43;
-            this.radioButton_c17.Text = "Glory Days";
-            this.radioButton_c17.Visible = false;
-            // 
+            //
+            // Auto-update Protocol field to match the selected chronicle, same as
+            // the original behavior documented in the changelog ("Jan 8: Protocol
+            // version now updates automatically when you select a different chronicle").
+            this.radioButton_c14.CheckedChanged += new EventHandler(this.radioButton_chronicle_CheckedChanged);
+            this.radioButton_cCT1.CheckedChanged += new EventHandler(this.radioButton_chronicle_CheckedChanged);
+            this.radioButton_cCT1_5.CheckedChanged += new EventHandler(this.radioButton_chronicle_CheckedChanged);
+            this.radioButton_cCT2_1.CheckedChanged += new EventHandler(this.radioButton_chronicle_CheckedChanged);
+            this.radioButton_cCT2_2.CheckedChanged += new EventHandler(this.radioButton_chronicle_CheckedChanged);
+            this.radioButton_cCT2_3.CheckedChanged += new EventHandler(this.radioButton_chronicle_CheckedChanged);
+            //
             // checkBox_LS_GS_Same_IP
             // 
             this.checkBox_LS_GS_Same_IP.AutoSize = true;
@@ -2086,14 +2144,29 @@ namespace L2_login
                     Globals.gamedata.Chron = Chronicle.CT2_6;
                 }
 
-                if (radioButton_c17.Checked)
+                if (radioButton_cCT1.Checked)
                 {
-                    Globals.gamedata.Chron = Chronicle.CT3_2;
+                    Globals.gamedata.Chron = Chronicle.CT1;
                 }
 
-                if (radioButton_c18.Checked)
+                if (radioButton_cCT1_5.Checked)
                 {
-                    Globals.gamedata.Chron = Chronicle.CT4_0;
+                    Globals.gamedata.Chron = Chronicle.CT1_5;
+                }
+
+                if (radioButton_cCT2_1.Checked)
+                {
+                    Globals.gamedata.Chron = Chronicle.CT2_1;
+                }
+
+                if (radioButton_cCT2_2.Checked)
+                {
+                    Globals.gamedata.Chron = Chronicle.CT2_2;
+                }
+
+                if (radioButton_cCT2_3.Checked)
+                {
+                    Globals.gamedata.Chron = Chronicle.CT2_3;
                 }
 
                 return true;
@@ -2102,6 +2175,77 @@ namespace L2_login
             {
                 Globals.l2net_home.Add_Error("crash: wtf blowfish key... double check and try again");
                 return false;
+            }
+        }
+
+        // Cross-referenced from multiple independent sources (this project's own
+        // changelog, the v394 distribution's command-line docs, and L2 protocol
+        // detection tooling) - see AUDITORIA_MIGRACAO.md section 2.16 for the
+        // citations behind each number.
+        private void radioButton_chronicle_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton rb = sender as RadioButton;
+            if (rb == null || !rb.Checked)
+            {
+                return;
+            }
+
+            if (rb == radioButton_cCT1) { textBox_logon_prot.Text = "828"; }
+            else if (rb == radioButton_cCT1_5) { textBox_logon_prot.Text = "831"; }
+            else if (rb == radioButton_cCT2_1) { textBox_logon_prot.Text = "851"; }
+            else if (rb == radioButton_cCT2_2) { textBox_logon_prot.Text = "17"; }
+            else if (rb == radioButton_cCT2_3) { textBox_logon_prot.Text = "87"; }
+            else if (rb == radioButton_c14) { textBox_logon_prot.Text = "273"; }
+        }
+
+        // Persists only blowfish key, protocol, and login server IP between sessions.
+        // Deliberately never reads/writes username or password (textBox_lname/textBox_pword).
+        private static readonly string LoginStatePath = "config\\login_state.txt";
+
+        private void SaveLoginState()
+        {
+            try
+            {
+                using (StreamWriter fileout = new StreamWriter(LoginStatePath, false))
+                {
+                    fileout.WriteLine(textBox_blowfish.Text);
+                    fileout.WriteLine(textBox_logon_prot.Text);
+                    fileout.WriteLine(textBox_oog_logon_ip.Text);
+                }
+            }
+            catch
+            {
+                // Auto-save must never interrupt the user.
+            }
+        }
+
+        private void LoadLoginState()
+        {
+            try
+            {
+                if (!File.Exists(LoginStatePath))
+                {
+                    return;
+                }
+
+                using (StreamReader filein = new StreamReader(LoginStatePath))
+                {
+                    string blowfish = filein.ReadLine();
+                    string protocol = filein.ReadLine();
+                    string ip = filein.ReadLine();
+
+                    if (!string.IsNullOrEmpty(blowfish)) { textBox_blowfish.Text = blowfish; }
+                    if (!string.IsNullOrEmpty(protocol)) { textBox_logon_prot.Text = protocol; }
+                    if (!string.IsNullOrEmpty(ip))
+                    {
+                        textBox_oog_logon_ip.Text = ip;
+                        textBox_ig_login_ip.Text = ip;
+                    }
+                }
+            }
+            catch
+            {
+                // Corrupt/missing save file: just keep the defaults already set.
             }
         }
 
@@ -2199,7 +2343,7 @@ namespace L2_login
 
         private void comboBox_ig_login_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string s = loginserver_list[comboBox_ig_login.SelectedIndex].ToString();
+            string s = loginserver_list[comboBox_ig_login.SelectedIndex];
             string s2 = null;
             string[] words = s.Split(' ', ':');
             textBox_ig_login_ip.Text = words[0];
@@ -2222,7 +2366,7 @@ namespace L2_login
 
         private void comboBox_oog_login_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string s = loginserver_list[comboBox_oog_login.SelectedIndex].ToString();
+            string s = loginserver_list[comboBox_oog_login.SelectedIndex];
             string s2 = null;
             string[] words = s.Split(' ', ':');
             textBox_oog_logon_ip.Text = words[0];
@@ -2245,7 +2389,7 @@ namespace L2_login
 
         private void comboBox_blowfish_SelectedIndexChanged(object sender, EventArgs e)
         {
-            textBox_blowfish.Text = blowfish_list[comboBox_blowfish.SelectedIndex].ToString();
+            textBox_blowfish.Text = blowfish_list[comboBox_blowfish.SelectedIndex];
         }
 
         private void button_select_oog_Click(object sender, EventArgs e)
@@ -2675,7 +2819,7 @@ namespace L2_login
 
         private void comboBox_gsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string s = gameserver_list[comboBox_gsList.SelectedIndex].ToString();
+            string s = gameserver_list[comboBox_gsList.SelectedIndex];
             string s2 = null;
             string[] words = s.Split(' ', ':');
             textBox_game_ip.Text = words[0];

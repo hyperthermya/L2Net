@@ -583,11 +583,12 @@ namespace L2_login
         {
             try
             {
-                System.Diagnostics.Process.Start("http://l2net.insane-gamers.com/donate.php");
+                // insane-gamers.com is defunct; point donations to the current home of the project.
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(Globals.VersionLetter) { UseShellExecute = true });
             }
-            catch
+            catch (Exception ex)
             {
-                //problem opening browser?
+                ErrorLog.Log("menuItem_help_donate_Click", ex);
             }
         }
 
@@ -595,11 +596,12 @@ namespace L2_login
         {
             try
             {
-                System.Diagnostics.Process.Start("http://insane-gamers.com/forum.php");
+                // insane-gamers.com is defunct; point to the current home of the project.
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(Globals.VersionLetter) { UseShellExecute = true });
             }
-            catch
+            catch (Exception ex)
             {
-                //problem opening browser?
+                ErrorLog.Log("menuItem_forums_Click", ex);
             }
         }
 
@@ -607,11 +609,24 @@ namespace L2_login
         {
             try
             {
-                System.Diagnostics.Process.Start("EULA.txt");
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(System.IO.Path.Combine(Globals.PATH, "EULA.txt")) { UseShellExecute = true });
             }
-            catch
+            catch (Exception ex)
             {
-                //problem opening browser?
+                ErrorLog.Log("eULAToolStripMenuItem_Click", ex);
+            }
+        }
+
+        private void menuitem_help_checkforupdates_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // No update-check server exists anymore; send the user to the GitHub repo/releases instead.
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(Globals.VersionLetter + "/releases") { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Log("menuitem_help_checkforupdates_Click", ex);
             }
         }
 

@@ -162,6 +162,11 @@ namespace L2_login
             }
         }
 
+        // Decrypted data files are plain-text gameplay data (skill/item/npc names etc.);
+        // 64MB is far above any real datapack file, so anything beyond that means the
+        // 4-byte length header is garbage rather than a legitimate value.
+        private const int MaxDecompressedSize = 64 * 1024 * 1024;
+
         public static byte[] Decrypt(byte[] data, string key, string salt)
         {
             byte[] dec;
@@ -175,7 +180,23 @@ namespace L2_login
                 throw e;
             }
 
+            if (dec.Length < 4)
+            {
+                throw new InvalidDataException(
+                    $"Decrypted payload is only {dec.Length} byte(s), expected at least 4 for the length header. " +
+                    "The source file is missing, empty, truncated, or was encrypted with a different key/salt.");
+            }
+
             int d_len = BitConverter.ToInt32(dec, 0);
+
+            if (d_len < 0 || d_len > MaxDecompressedSize)
+            {
+                throw new InvalidDataException(
+                    $"Decrypted length header is {d_len}, outside the valid range (0-{MaxDecompressedSize}). " +
+                    "This means AES decryption produced garbage instead of real data — almost always because the " +
+                    "source .txt file is missing/corrupt/truncated (check bin\\latest\\build\\data\\) or was encrypted " +
+                    "with a different key/salt than this build expects.");
+            }
 
             MemoryStream ms = new MemoryStream(dec);
             ms.Position = 4;

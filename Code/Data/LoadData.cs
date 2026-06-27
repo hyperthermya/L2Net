@@ -52,6 +52,7 @@ namespace L2_login
             }
             catch (Exception e)
             {
+                ErrorLog.Log("LoadDataFiles (reading raw data files)", e);
                 throw new Exception(e.Message);
             }
 
@@ -168,8 +169,9 @@ namespace L2_login
             //Add_Text("loaded gg", Globals.Red);
 #if !DEBUG
             }
-            catch
+            catch (Exception e)
             {
+                ErrorLog.Log("data\\gg.txt", e);
                 Globals.l2net_home.Add_PopUpError("failed to load data\\gg.txt");
             }
 #endif
@@ -219,8 +221,9 @@ namespace L2_login
             //Add_Text("loaded lvlexp", Globals.Red);
 #if !DEBUG
             }
-            catch
+            catch (Exception e)
             {
+                ErrorLog.Log("data\\lvlexp.txt", e);
                 Globals.l2net_home.Add_PopUpError("failed to load data\\lvlexp.txt");
             }
 #endif
@@ -269,6 +272,7 @@ namespace L2_login
             }
             catch (Exception e)
             {
+                ErrorLog.Log("data\\servername.txt", e);
                 Globals.l2net_home.Add_PopUpError(e.GetType() + "\n Failed to load data\\servername.txt");
             }
 
@@ -314,8 +318,9 @@ namespace L2_login
 
                 //Add_Text("loaded systemmsgs", Globals.Red);
             }
-            catch
+            catch (Exception e)
             {
+                ErrorLog.Log("data\\systemmsg.txt", e);
                 Globals.l2net_home.Add_PopUpError("failed to load data\\systemmsg.txt");
             }
 
@@ -359,15 +364,19 @@ namespace L2_login
                 mem_stream.Close();
                 temp_stream.Close();
 
-                HennaGroup null_dye = new HennaGroup();
-                null_dye.ID = 0;
-                null_dye.Name = "no dye";
-                Globals.hennagrp.Add((uint)0, null_dye);
+                if (!Globals.hennagrp.ContainsKey((uint)0))
+                {
+                    HennaGroup null_dye = new HennaGroup();
+                    null_dye.ID = 0;
+                    null_dye.Name = "no dye";
+                    Globals.hennagrp.Add((uint)0, null_dye);
+                }
 
                 //Add_Text("loaded hennagrp", Globals.Red);
             }
-            catch
+            catch (Exception e)
             {
+                ErrorLog.Log("data\\hennagrp.txt", e);
                 Globals.l2net_home.Add_PopUpError("failed to load data\\hennagrp.txt");
             }
 
@@ -411,15 +420,19 @@ namespace L2_login
                 mem_stream.Close();
                 temp_stream.Close();
 
-                NPCName null_npc = new NPCName();
-                null_npc.ID = 0;
-                null_npc.Name = "null npc";
-                Globals.npcname.Add((uint)0, null_npc);
+                if (!Globals.npcname.ContainsKey((uint)0))
+                {
+                    NPCName null_npc = new NPCName();
+                    null_npc.ID = 0;
+                    null_npc.Name = "null npc";
+                    Globals.npcname.Add((uint)0, null_npc);
+                }
 
                 //Add_Text("loaded npcname", Globals.Red);
             }
-            catch
+            catch (Exception e)
             {
+                ErrorLog.Log("data\\npcname.txt", e);
                 Globals.l2net_home.Add_PopUpError("failed to load data\\npcname.txt");
             }
 
@@ -463,15 +476,19 @@ namespace L2_login
                 mem_stream.Close();
                 temp_stream.Close();
 
-                ItemName null_itm = new ItemName();
-                null_itm.ID = 0;
-                null_itm.Name = "no item";
-                Globals.itemname.Add((uint)0, null_itm);
+                if (!Globals.itemname.ContainsKey((uint)0))
+                {
+                    ItemName null_itm = new ItemName();
+                    null_itm.ID = 0;
+                    null_itm.Name = "no item";
+                    Globals.itemname.Add((uint)0, null_itm);
+                }
 
                 //Add_Text("loaded itemname", Globals.Red);
             }
             catch (Exception e)
             {
+                ErrorLog.Log("data\\itemname.txt", e);
                 Globals.l2net_home.Add_PopUpError("failed to load data\\itemname.txt" + e.Message);
             }
             //////////////////
@@ -495,7 +512,10 @@ namespace L2_login
 
                     itemnm.ParseETC(loaded);
 
-                    ((ItemName)Globals.itemname[itemnm.ID]).ParseETC(itemnm);
+                    if (Globals.itemname.ContainsKey(itemnm.ID))
+                    {
+                        ((ItemName)Globals.itemname[itemnm.ID]).ParseETC(itemnm);
+                    }
                 }
 
                 mem_stream.Close();
@@ -503,9 +523,10 @@ namespace L2_login
 
                 //Add_Text("loaded etcitemgrp", Globals.Red);
             }
-            catch
+            catch (Exception e)
             {
-                Globals.l2net_home.Add_PopUpError("failed to load data\\etcitemgrp.txt");
+                ErrorLog.Log("data\\etcitemgrp.txt", e);
+                Globals.l2net_home.Add_PopUpError("failed to load data\\etcitemgrp.txt: " + e.Message);
             }
             //////////////
             try
@@ -541,6 +562,7 @@ namespace L2_login
             }
             catch (Exception e)
             {
+                ErrorLog.Log("data\\weapongrp.txt", e);
                 Globals.l2net_home.Add_PopUpError("failed to load data\\weapongrp.txt " + e.Message);
             }
             //////////////
@@ -564,7 +586,10 @@ namespace L2_login
 
                     itemnm.ParseArmor(loaded);
 
-                    ((ItemName)Globals.itemname[itemnm.ID]).ParseArmor(itemnm);
+                    if (Globals.itemname.ContainsKey(itemnm.ID))
+                    {
+                        ((ItemName)Globals.itemname[itemnm.ID]).ParseArmor(itemnm);
+                    }
                 }
 
                 mem_stream.Close();
@@ -572,9 +597,10 @@ namespace L2_login
 
                 //Add_Text("loaded armorgrp", Globals.Red);
             }
-            catch
+            catch (Exception e)
             {
-                Globals.l2net_home.Add_PopUpError("failed to load data\\armorgrp.txt");
+                ErrorLog.Log("data\\armorgrp.txt", e);
+                Globals.l2net_home.Add_PopUpError("failed to load data\\armorgrp.txt: " + e.Message);
             }
 
             dec = null;
@@ -619,8 +645,9 @@ namespace L2_login
 
                 //Add_Text("loaded classes", Globals.Red);
             }
-            catch
+            catch (Exception e)
             {
+                ErrorLog.Log("data\\classes.txt", e);
                 Globals.l2net_home.Add_PopUpError("failed to load data\\classes.txt");
             }
 
@@ -637,7 +664,7 @@ namespace L2_login
 
             try
             {
-                dec = GetData(data_races, "3L=GSb_H4j-&S£m1");
+                dec = GetData(data_races, "3L=GSb_H4j-&S\u00A3m1");
 
                 mem_stream = new MemoryStream(dec);
                 temp_stream = new StreamReader(mem_stream);
@@ -666,8 +693,9 @@ namespace L2_login
 
                 //Add_Text("loaded races", Globals.Red);
             }
-            catch
+            catch (Exception e)
             {
+                ErrorLog.Log("data\\races.txt", e);
                 Globals.l2net_home.Add_PopUpError("failed to load data\\races.txt");
             }
 
@@ -726,6 +754,7 @@ namespace L2_login
             }
             catch (Exception e)
             {
+                ErrorLog.Log("data\\skillname.txt (LoadSkills)", e);
                 throw new Exception("Error during LoadSkill: " + e.Message);
             }
         }
@@ -769,8 +798,9 @@ namespace L2_login
 
                 //Add_Text("loaded actions", Globals.Red);
             }
-            catch
+            catch (Exception e)
             {
+                ErrorLog.Log("data\\actionname.txt", e);
                 Globals.l2net_home.Add_PopUpError("failed to load data\\actionname.txt");
             }
 
@@ -816,8 +846,9 @@ namespace L2_login
 
                 //Add_Text("loaded quests", Globals.Red);
             }
-            catch
+            catch (Exception e)
             {
+                ErrorLog.Log("data\\questname.txt", e);
                 Globals.l2net_home.Add_PopUpError("failed to load data\\questname.txt");
             }
 
@@ -863,8 +894,9 @@ namespace L2_login
 
                 //Add_Text("loaded zones", Globals.Red);
             }
-            catch
+            catch (Exception e)
             {
+                ErrorLog.Log("data\\zonename.txt", e);
                 Globals.l2net_home.Add_PopUpError("failed to load data\\zonename.txt");
             }
 
@@ -883,7 +915,7 @@ namespace L2_login
             {
                 ///#)"(#&JH(S&ZKS=
                 //dec = GetData(Globals.PATH + "\\data\\npcstring.txt");
-                dec = GetData(data_npcstring, ")#&!%J)(/S)J/&%¤");
+                dec = GetData(data_npcstring, ")#&!%J)(/S)J/&%\u00A4");
 
                 mem_stream = new MemoryStream(dec);
                 temp_stream = new StreamReader(mem_stream);
@@ -912,8 +944,9 @@ namespace L2_login
 
                 //Globals.l2net_home.Add_Text("loaded npcstring", Globals.Red);
             }
-            catch
+            catch (Exception e)
             {
+                ErrorLog.Log("data\\npcstring.txt", e);
                 Globals.l2net_home.Add_PopUpError("failed to load data\\npcstring.txt");
             }
 

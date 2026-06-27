@@ -1,0 +1,148 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>Resources\l2_fedorf.ico</ApplicationIcon>
+    <AssemblyName>L2NET</AssemblyName>
+    <RootNamespace>L2_login</RootNamespace>
+    <DebugType>full</DebugType>
+    <FileAlignment>4096</FileAlignment>
+    <ErrorReport>prompt</ErrorReport>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <!-- Force every build (Debug or Release, dotnet build or Visual Studio) to land in bin\Release,
+         regardless of -c/Configuration, so there is a single, predictable output location. -->
+<OutputPath>bin\Release\</OutputPath>
+     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="app.config" />
+    <Content Include="Resources\*.ico" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Runtime data lives in GameData\ at the repo root, deliberately outside bin\, so that
+         build-output cleanup (rm -rf bin, IDE "Clean Solution", etc.) can never delete it.
+         bin\latest\build\ used to hold this and was wiped by such cleanups multiple times. -->
+    <Content Include="GameData\EULA.txt">
+      <Link>EULA.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GameData\commands.txt">
+      <Link>commands.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GameData\data\**\*.*">
+      <Link>data\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GameData\config\**\*.*">
+      <Link>config\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GameData\crests\**\*.*">
+      <Link>crests\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GameData\scripts\**\*.*">
+      <Link>scripts\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GameData\maps\**\*.*">
+      <Link>Maps\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GameData\icons\**\*.*">
+      <Link>Icons\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GameData\sounds\**\*.*">
+      <Link>Sounds\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Code\Scripting\Windows\ScriptWindow_HTML.resx" />
+    <EmbeddedResource Include="Languages\Chinese.resx" />
+    <EmbeddedResource Include="Languages\Czech.resx" />
+    <EmbeddedResource Include="Languages\Danish.resx" />
+    <EmbeddedResource Include="Languages\Dutch.resx" />
+    <EmbeddedResource Include="Languages\English.resx" />
+    <EmbeddedResource Include="Languages\Finnish.resx" />
+    <EmbeddedResource Include="Languages\French.resx" />
+    <EmbeddedResource Include="Languages\German.resx" />
+    <EmbeddedResource Include="Languages\Greek.resx" />
+    <EmbeddedResource Include="Languages\Hungarian.resx" />
+    <EmbeddedResource Include="Languages\Italian.resx" />
+    <EmbeddedResource Include="Languages\Japanese.resx" />
+    <EmbeddedResource Include="Languages\Korean.resx" />
+    <EmbeddedResource Include="Languages\Leet.resx" />
+    <EmbeddedResource Include="Languages\Lithuanian.resx" />
+    <EmbeddedResource Include="Languages\Marklar.resx" />
+    <EmbeddedResource Include="Languages\Norwegian.resx" />
+    <EmbeddedResource Include="Languages\Polish.resx" />
+    <EmbeddedResource Include="Languages\PortugueseBR.resx" />
+    <EmbeddedResource Include="Languages\PortuguesePT.resx" />
+    <EmbeddedResource Include="Languages\Romanian.resx" />
+    <EmbeddedResource Include="Languages\Russian.resx" />
+    <EmbeddedResource Include="Languages\Slovenian.resx" />
+    <EmbeddedResource Include="Languages\Spanish.resx" />
+    <EmbeddedResource Include="Languages\Swedish.resx" />
+    <EmbeddedResource Include="Languages\Thai.resx" />
+    <EmbeddedResource Include="Languages\Vietnamese.resx" />
+    <EmbeddedResource Include="Properties\Resources.resx" />
+    <EmbeddedResource Include="Windows\L2NET\L2NET.resx" />
+    <EmbeddedResource Include="Windows\MDI\Base.resx" />
+    <EmbeddedResource Include="Windows\MDI\Login.resx" />
+    <EmbeddedResource Include="Windows\MDI\Map.resx" />
+    <EmbeddedResource Include="Windows\Popup\About.resx" />
+    <EmbeddedResource Include="Windows\Popup\ActionWindow.resx" />
+    <EmbeddedResource Include="Windows\Popup\BotOptionsScreen.resx" />
+    <EmbeddedResource Include="Windows\Popup\BuyWindow.resx" />
+    <EmbeddedResource Include="Windows\Popup\CreateChar.resx" />
+    <EmbeddedResource Include="Windows\Popup\ExtendedActionWindow.resx" />
+    <EmbeddedResource Include="Windows\Popup\GameGuardClient.resx" />
+    <EmbeddedResource Include="Windows\Popup\GameGuardServer.resx" />
+    <EmbeddedResource Include="Windows\Popup\Language.resx" />
+    <EmbeddedResource Include="Windows\Popup\MailMenuWindow.resx" />
+    <EmbeddedResource Include="Windows\Popup\MailboxWindow.resx" />
+    <EmbeddedResource Include="Windows\Popup\ManualGameKey.resx" />
+    <EmbeddedResource Include="Windows\Popup\Packet_filter_window.resx" />
+    <EmbeddedResource Include="Windows\Popup\PetWindow.resx" />
+    <EmbeddedResource Include="Windows\Popup\PetWindowGive.resx" />
+    <EmbeddedResource Include="Windows\Popup\PetWindowTake.resx" />
+    <EmbeddedResource Include="Windows\Popup\PrivateStoreSellWindow.resx" />
+    <EmbeddedResource Include="Windows\Popup\ScriptDebugger.resx" />
+    <EmbeddedResource Include="Windows\Popup\Scripting.resx" />
+    <EmbeddedResource Include="Windows\Popup\Setup.resx" />
+    <EmbeddedResource Include="Windows\Popup\Splash.resx" />
+    <EmbeddedResource Include="Windows\Popup\TargetInfoScreen.resx" />
+    <EmbeddedResource Include="Windows\Popup\TradeWindow.resx" />
+    <EmbeddedResource Include="Windows\Popup\converter.resx" />
+    <EmbeddedResource Include="Windows\Popup\help_parser.resx" />
+    <EmbeddedResource Include="Windows\Popup\packet_window.resx" />
+    <EmbeddedResource Include="Windows\ProgressBar.resx" />
+    <EmbeddedResource Include="Windows\Top\Captcha.resx" />
+    <EmbeddedResource Include="Windows\Top\Overlay.resx" />
+    <EmbeddedResource Include="Windows\Top\PvPOverlay.resx" />
+    <EmbeddedResource Include="Windows\Top\ShortCutBar.resx" />
+  </ItemGroup>
+
+</Project>

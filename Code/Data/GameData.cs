@@ -11,14 +11,6 @@ namespace L2_login
         Fixed = 3,
     }
 
-    public struct Vertex
-    {
-        public SlimDX.Vector4 Position;
-        public int Color;
-        public float Tu;
-        public float Tv;
-    }
-
     public class DrawData
     {
         public uint ID;

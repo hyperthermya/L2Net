@@ -4552,6 +4552,7 @@ namespace L2_login
             this.menuitem_help_checkforupdates.Name = "menuitem_help_checkforupdates";
             this.menuitem_help_checkforupdates.Size = new System.Drawing.Size(171, 22);
             this.menuitem_help_checkforupdates.Text = "Check for Updates";
+            this.menuitem_help_checkforupdates.Click += new EventHandler(this.menuitem_help_checkforupdates_Click);
             // 
             // toolStripSeparator7
             // 
@@ -4736,7 +4737,7 @@ namespace L2_login
                 this.WindowState = FormWindowState.Normal;
             }
 
-            this.Menu = Globals.back_menu;
+            this.MainMenuStrip = Globals.back_menu;
         }
 
         private void L2NET_SizeChanged(object sender, EventArgs e)
@@ -4746,7 +4747,7 @@ namespace L2_login
             {
                 if (Globals.MinimizeToTray)
                 {
-                    Globals.back_menu = this.Menu;
+                    Globals.back_menu = this.MainMenuStrip;
 
                     //this.Hide();
                     notifyIcon_us.Visible = true;

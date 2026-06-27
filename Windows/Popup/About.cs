@@ -9,8 +9,9 @@ namespace L2_login
     public class About : Form
     {
         private Label label1;
-        private Label label_netversion;
         private Label label_version;
+        private Label label_runtime;
+        private Label label_netversion;
         private LinkLabel linkLabel_http;
         private Button button_close;
         private Label label_mode;
@@ -42,7 +43,8 @@ namespace L2_login
                     break;
             }
 
-            label_version.Text = "rev " + Globals.Version + Globals.VersionLetter;
+            label_version.Text = "Build: " + Globals.Version;
+            label_runtime.Text = Globals.Runtime;
 
             label_netversion.Text = ".Net version " + Environment.Version.Major.ToString() + "." + Environment.Version.Minor.ToString() + "." + Environment.Version.Revision.ToString() + " " + cpu;
 
@@ -78,6 +80,7 @@ namespace L2_login
         {
             this.label1 = new Label();
             this.label_version = new Label();
+            this.label_runtime = new Label();
             this.label_netversion = new Label();
             this.linkLabel_http = new LinkLabel();
             this.button_close = new Button();
@@ -85,70 +88,75 @@ namespace L2_login
             this.listBox_help = new ListBox();
             this.label2 = new Label();
             this.SuspendLayout();
-            // 
+            //
             // label1
-            // 
+            //
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            this.label1.Location = new System.Drawing.Point(0, 2);
+            this.label1.Location = new System.Drawing.Point(0, 8);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(290, 40);
+            this.label1.Size = new System.Drawing.Size(300, 40);
             this.label1.TabIndex = 0;
             this.label1.Text = "L2.Net";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
+            //
             // label_version
-            // 
-            this.label_version.Location = new System.Drawing.Point(199, 30);
+            //
+            this.label_version.Location = new System.Drawing.Point(0, 50);
             this.label_version.Name = "label_version";
-            this.label_version.Size = new System.Drawing.Size(88, 16);
+            this.label_version.Size = new System.Drawing.Size(300, 18);
             this.label_version.TabIndex = 1;
-            this.label_version.Text = "2015-??-??";
-            this.label_version.Click += new EventHandler(this.label_version_Click);
-            // 
+            this.label_version.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label_version.Text = "Build: 2026-??-??";
+            //
+            // label_runtime
+            //
+            this.label_runtime.Location = new System.Drawing.Point(0, 68);
+            this.label_runtime.Name = "label_runtime";
+            this.label_runtime.Size = new System.Drawing.Size(300, 18);
+            this.label_runtime.TabIndex = 2;
+            this.label_runtime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label_runtime.Text = "runtime";
+            //
             // label_netversion
-            // 
-            this.label_netversion.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            this.label_netversion.Location = new System.Drawing.Point(49, 210);
+            //
+            this.label_netversion.Location = new System.Drawing.Point(0, 86);
             this.label_netversion.Name = "label_netversion";
-            this.label_netversion.Size = new System.Drawing.Size(192, 23);
+            this.label_netversion.Size = new System.Drawing.Size(300, 18);
             this.label_netversion.TabIndex = 13;
             this.label_netversion.Text = "net version";
             this.label_netversion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // linkLabel_http
-            // 
-            this.linkLabel_http.Location = new System.Drawing.Point(0, 42);
-            this.linkLabel_http.Name = "linkLabel_http";
-            this.linkLabel_http.Size = new System.Drawing.Size(290, 23);
-            this.linkLabel_http.TabIndex = 14;
-            this.linkLabel_http.TabStop = true;
-            this.linkLabel_http.Text = "http://l2net.insane-gamers.com";
-            this.linkLabel_http.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.linkLabel_http.LinkClicked += new LinkLabelLinkClickedEventHandler(this.linkLabel_http_LinkClicked);
-            // 
-            // button_close
-            // 
-            this.button_close.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            this.button_close.Location = new System.Drawing.Point(110, 234);
-            this.button_close.Name = "button_close";
-            this.button_close.Size = new System.Drawing.Size(75, 23);
-            this.button_close.TabIndex = 0;
-            this.button_close.Text = "Close";
-            this.button_close.Click += new EventHandler(this.button_close_Click);
-            // 
+            //
             // label_mode
-            // 
-            this.label_mode.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            this.label_mode.Location = new System.Drawing.Point(49, 185);
+            //
+            this.label_mode.Location = new System.Drawing.Point(0, 104);
             this.label_mode.Name = "label_mode";
-            this.label_mode.Size = new System.Drawing.Size(192, 23);
+            this.label_mode.Size = new System.Drawing.Size(300, 18);
             this.label_mode.TabIndex = 17;
             this.label_mode.Text = "mode";
             this.label_mode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
+            //
+            // linkLabel_http
+            //
+            this.linkLabel_http.Location = new System.Drawing.Point(0, 126);
+            this.linkLabel_http.Name = "linkLabel_http";
+            this.linkLabel_http.Size = new System.Drawing.Size(300, 20);
+            this.linkLabel_http.TabIndex = 14;
+            this.linkLabel_http.TabStop = true;
+            this.linkLabel_http.Text = "https://github.com/devmvalvm/L2Net";
+            this.linkLabel_http.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.linkLabel_http.LinkClicked += new LinkLabelLinkClickedEventHandler(this.linkLabel_http_LinkClicked);
+            //
+            // label2
+            //
+            this.label2.Location = new System.Drawing.Point(0, 154);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(300, 20);
+            this.label2.TabIndex = 19;
+            this.label2.Text = "Special thanks to";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            //
             // listBox_help
-            // 
-            this.listBox_help.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            //
             this.listBox_help.FormattingEnabled = true;
             this.listBox_help.Items.AddRange(new object[] {
             "mpj123 for making this open source",
@@ -165,25 +173,24 @@ namespace L2_login
             "Spider",
             "deMEV",
             "escabuchen"});
-            this.listBox_help.Location = new System.Drawing.Point(12, 87);
+            this.listBox_help.Location = new System.Drawing.Point(12, 176);
             this.listBox_help.Name = "listBox_help";
-            this.listBox_help.Size = new System.Drawing.Size(266, 121);
+            this.listBox_help.Size = new System.Drawing.Size(276, 130);
             this.listBox_help.TabIndex = 18;
-            // 
-            // label2
-            // 
-            this.label2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            this.label2.Location = new System.Drawing.Point(97, 60);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(88, 24);
-            this.label2.TabIndex = 19;
-            this.label2.Text = "special thanks to";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            // 
+            //
+            // button_close
+            //
+            this.button_close.Location = new System.Drawing.Point(112, 316);
+            this.button_close.Name = "button_close";
+            this.button_close.Size = new System.Drawing.Size(75, 23);
+            this.button_close.TabIndex = 0;
+            this.button_close.Text = "Close";
+            this.button_close.Click += new EventHandler(this.button_close_Click);
+            //
             // About
-            // 
+            //
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(290, 262);
+            this.ClientSize = new System.Drawing.Size(300, 348);
             this.ControlBox = false;
             this.Controls.Add(this.label2);
             this.Controls.Add(this.listBox_help);
@@ -191,6 +198,7 @@ namespace L2_login
             this.Controls.Add(this.button_close);
             this.Controls.Add(this.linkLabel_http);
             this.Controls.Add(this.label_netversion);
+            this.Controls.Add(this.label_runtime);
             this.Controls.Add(this.label_version);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
@@ -211,22 +219,17 @@ namespace L2_login
         {
             try
             {
-                System.Diagnostics.Process.Start(linkLabel_http.Text);
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(linkLabel_http.Text) { UseShellExecute = true });
             }
-            catch
+            catch (Exception ex)
             {
-                //problem opening browser?
+                ErrorLog.Log("About.linkLabel_http_LinkClicked", ex);
             }
         }
 
         private void button_close_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void label_version_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

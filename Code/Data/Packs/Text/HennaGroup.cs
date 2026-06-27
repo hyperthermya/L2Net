@@ -24,26 +24,31 @@ namespace L2_login
             int pipe = 0, oldpipe = 0;
             //ID
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             ID = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //DYE_ID
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             DYE_ID = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Name
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { Name = oldpipe <= inp.Length ? inp.Substring(oldpipe) : ""; return; }
             Name = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             //Icon
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { Icon = oldpipe <= inp.Length ? inp.Substring(oldpipe) : ""; return; }
             Icon = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             //Add_Name
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { Add_Name = oldpipe <= inp.Length ? inp.Substring(oldpipe) : ""; return; }
             Add_Name = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             //Add_Desc
-            Add_Desc = inp.Substring(oldpipe, inp.Length - oldpipe);
+            Add_Desc = oldpipe <= inp.Length ? inp.Substring(oldpipe) : "";
         }
     }//end of HennaGroup
 }

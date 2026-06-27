@@ -1,5 +1,5 @@
 ﻿using System;
-using SlimDX.Direct3D9;
+using System.Drawing;
 
 namespace L2_login
 {
@@ -12,7 +12,7 @@ namespace L2_login
         public int Z_Max = 1000000;
         public bool Encrypted = false;
         private System.IO.MemoryStream _image = null;
-        private Texture _dxTexture;
+        private Bitmap _dxTexture;
 
         public float UpperX = 0;
         public float UpperY = 0;
@@ -24,66 +24,37 @@ namespace L2_login
 
         public void ReleaseResources()
         {
-            if (_image != null)
+            if (_image == null && _dxTexture == null) return;
+            if (_image != null && (DateTime.Now - _lastaccessed_imagestream).Ticks > Globals.MAP_HOLD_STREAM)
             {
-                if ((DateTime.Now - _lastaccessed_imagestream).Ticks > Globals.MAP_HOLD_STREAM)
-                {
-                    //release the stream
-                    _image.Close();
-                    _image = null;
-                    _lastaccessed_imagestream = new DateTime(0L);
-                }
+                _image.Close();
+                _image = null;
+                _lastaccessed_imagestream = new DateTime(0L);
             }
-            if (_dxTexture != null)
+            if (_dxTexture != null && (DateTime.Now - _lastaccessed_dxtexture).Ticks > Globals.MAP_HOLD_TEXTURE)
             {
-                if ((DateTime.Now - _lastaccessed_dxtexture).Ticks > Globals.MAP_HOLD_TEXTURE)
-                {
-                    //release the stream
-                    _dxTexture.Dispose();
-                    _dxTexture = null;
-                    _lastaccessed_dxtexture = new DateTime(0L);
-                }
+                _dxTexture.Dispose();
+                _dxTexture = null;
+                _lastaccessed_dxtexture = new DateTime(0L);
             }
         }
 
         public System.IO.MemoryStream Image
         {
-            get
-            {
-                _lastaccessed_imagestream = DateTime.Now;
-                return _image;
-            }
-            set
-            {
-                _lastaccessed_imagestream = DateTime.Now;
-                _image = value;
-            }
+            get { _lastaccessed_imagestream = DateTime.Now; return _image; }
+            set { _lastaccessed_imagestream = DateTime.Now; _image = value; }
         }
-        public Texture dxTexture
+        public Bitmap dxTexture
         {
-            get
-            {
-                _lastaccessed_dxtexture = DateTime.Now;
-                return _dxTexture;
-            }
-            set
-            {
-                _lastaccessed_dxtexture = DateTime.Now;
-                _dxTexture = value;
-            }
+            get { _lastaccessed_dxtexture = DateTime.Now; return _dxTexture; }
+            set { _lastaccessed_dxtexture = DateTime.Now; _dxTexture = value; }
         }
 
         public void Clear()
         {
-            FileName = "";
-            X = -100;
-            Y = -100;
-            Z_Min = -1000000;
-            Z_Max = 1000000;
-            UpperX = 0;
-            UpperY = 0;
-            LowerX = 0;
-            LowerY = 0;
+            FileName = ""; X = -100; Y = -100;
+            Z_Min = -1000000; Z_Max = 1000000;
+            UpperX = 0; UpperY = 0; LowerX = 0; LowerY = 0;
         }
 
         public void Setup()
@@ -97,47 +68,30 @@ namespace L2_login
         public void Parse(string inp)
         {
             int pipe;
-            //FileName
             pipe = inp.IndexOf('|');
             FileName = inp.Substring(0, pipe);
             inp = inp.Remove(0, pipe + 1);
-            //X
             pipe = inp.IndexOf('|');
             X = Util.GetInt32(inp.Substring(0, pipe));
             inp = inp.Remove(0, pipe + 1);
-            //Y
             pipe = inp.IndexOf('|');
             Y = Util.GetInt32(inp.Substring(0, pipe));
             inp = inp.Remove(0, pipe + 1);
-            //Z_Min
             pipe = inp.IndexOf('|');
             Z_Min = Util.GetInt32(inp.Substring(0, pipe));
             inp = inp.Remove(0, pipe + 1);
-
             pipe = inp.IndexOf('|');
             if (pipe == -1)
             {
-                //Z_Max
                 Z_Max = Util.GetInt32(inp);
-                //Encrypted
                 Encrypted = false;
             }
             else
             {
-                //Z_Max
                 Z_Max = Util.GetInt32(inp.Substring(0, pipe));
                 inp = inp.Remove(0, pipe + 1);
-                //Encrypted
-                if (Util.GetInt32(inp) == 0)
-                {
-                    Encrypted = false;
-                }
-                else
-                {
-                    Encrypted = true;
-                }
+                Encrypted = Util.GetInt32(inp) != 0;
             }
-
             Setup();
         }
     }

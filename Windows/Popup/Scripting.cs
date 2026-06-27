@@ -254,11 +254,11 @@ namespace L2_login
         {
             try
             {
-                System.Diagnostics.Process.Start(e.LinkText);
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(e.LinkText) { UseShellExecute = true });
             }
-            catch
+            catch (Exception ex)
             {
-                //problem opening browser?
+                ErrorLog.Log("Scripting.richTextBox_script_LinkClicked", ex);
             }
         }
 

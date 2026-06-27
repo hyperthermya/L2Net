@@ -74,7 +74,7 @@ namespace L2_login
             }
             catch (Exception e)
             {
-                Globals.l2net_home.Add_Error("crash: failed to create SlimDX Keyboard : " + e.Message);
+                Globals.l2net_home.Add_Error("crash: failed to create keyboard hook : " + e.Message);
             }
 
             Globals.broadcastthread = new BroadcastThread();

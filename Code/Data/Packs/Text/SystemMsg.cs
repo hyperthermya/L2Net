@@ -27,33 +27,41 @@ namespace L2_login
             int pipe = 0, oldpipe = 0;
             //ID
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             ID = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Message
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Message = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             //Group
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Group = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Blue 0
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Blue = byte.Parse(inp.Substring(oldpipe, pipe - oldpipe), System.Globalization.NumberStyles.HexNumber);
             oldpipe = pipe + 1;
             //Green 1
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Green = byte.Parse(inp.Substring(oldpipe, pipe - oldpipe), System.Globalization.NumberStyles.HexNumber);
             oldpipe = pipe + 1;
             //Red 2
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Red = byte.Parse(inp.Substring(oldpipe, pipe - oldpipe), System.Globalization.NumberStyles.HexNumber);
             oldpipe = pipe + 1;
             //SubMessage
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             SubMessage = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             //Type
+            if (oldpipe > inp.Length) { return; }
             Type = inp.Substring(oldpipe, inp.Length - oldpipe);
         }
 

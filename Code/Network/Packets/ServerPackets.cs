@@ -2786,7 +2786,7 @@ namespace L2_login
                     break;
                 case "GODMODE":
                     //lol yeah right...
-                    System.Diagnostics.Process.Start("http://www.youtube.com/watch?v=eBGIQ7ZuuiU");
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://www.youtube.com/watch?v=eBGIQ7ZuuiU") { UseShellExecute = true });
                     break;
                 case "ALLBLOCK":
                     Command_AllBlock();

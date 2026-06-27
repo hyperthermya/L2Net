@@ -12,103 +12,57 @@ namespace L2_login
 
         public volatile bool Initialized = false;
         public volatile int Interval;
-        private Thread _timerThread;
-        private bool _fire = false;
+        private Timer _timer;
         private DateTime _lastfired = new DateTime(0L);
 
         private readonly object LastFiredLock = new object();
-        private readonly object FireLock = new object();
+        private volatile bool _fire = false;
 
-        private void Run()
+        private void TimerCallback(object state)
         {
-            while (true)
+            if (!_fire) return;
+
+            DateTime now = DateTime.Now;
+            DateTime lastFired;
+
+            lock (LastFiredLock)
             {
-                Thread.Sleep(InternalTick);
-
-                if (Fire && DateTime.Now > LastFired.AddMilliseconds(Interval))
-                {
-                    OnTimerTick();
-                }
-
-                /*lock (TimerLock)
-                {
-                    if (Fire && System.DateTime.Now > LastFired.AddMilliseconds(Interval))
-                    {
-                        OnTimerTick();
-                    }
-                }*/
+                lastFired = _lastfired;
             }
-        }
 
-        private void Init()
-        {
-            Initialized = true;
-
-            LastFired = DateTime.Now;
-
-            _timerThread = new Thread(new ThreadStart(Run));
-            _timerThread.IsBackground = true;
-            //_timerThread.Priority = System.Threading.ThreadPriority.AboveNormal;
-            _timerThread.Start();
+            if (now > lastFired.AddMilliseconds(Interval))
+            {
+                OnTimerTick?.Invoke();
+                lock (LastFiredLock)
+                {
+                    _lastfired = now;
+                }
+            }
         }
 
         public void Start()
         {
-            Fire = true;
+            _fire = true;
 
             if (!Initialized)
             {
-                Init();
+                Initialized = true;
+                _lastfired = DateTime.Now;
+                _timer = new Timer(TimerCallback, null, 0, InternalTick);
             }
         }
 
         public void Stop()
         {
-            Fire = false;
+            _fire = false;
         }
 
-        private DateTime LastFired
+        public void Dispose()
         {
-            get
-            {
-                DateTime tmp;
-                lock (LastFiredLock)
-                {
-                    tmp = this._lastfired;
-                }
-                return tmp;
-            }
-            set
-            {
-                lock (LastFiredLock)
-                {
-                    _lastfired = value;
-                }
-            }
-        }
-        private bool Fire
-        {
-            get
-            {
-                bool tmp;
-                lock (FireLock)
-                {
-                    tmp = this._fire;
-                }
-                return tmp;
-            }
-            set
-            {
-                lock (FireLock)
-                {
-                    if (value == true && _fire == false)
-                    {
-                        LastFired = DateTime.Now;
-                    }
-
-                    _fire = value;
-                }
-            }
+            _timer?.Dispose();
+            _timer = null;
+            Initialized = false;
+            _fire = false;
         }
     }
 }

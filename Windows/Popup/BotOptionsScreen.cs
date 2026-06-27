@@ -481,6 +481,24 @@ namespace L2_login
 
                 button_save_Click(null, null);
             }
+            else if (File.Exists(AutoSaveOptionsPath))
+            {
+                // No -o/-options command line override: fall back to the last
+                // configuration that was auto-saved from a previous session.
+                try
+                {
+                    ClearData();
+
+                    using (StreamReader filein = new StreamReader(AutoSaveOptionsPath))
+                    {
+                        ReadData(filein);
+                    }
+                }
+                catch
+                {
+                    // Corrupt/incompatible auto-save file: just start from defaults.
+                }
+            }
 
 
             //this.GotFocus += new EventHandler(BotOptionsScreen_GotFocus);
@@ -7184,6 +7202,33 @@ namespace L2_login
             else
             {
                 Globals.lagfilter_xf_ci_simple_race = false;
+            }
+
+            AutoSaveOptions();
+        }
+
+        // Persists the current bot options to a fixed file so they survive
+        // closing/reopening the bot without the user manually using Save/Load Options.
+        private static readonly string AutoSaveOptionsPath = Globals.PATH + "\\Options\\last_options.l2d";
+
+        private void AutoSaveOptions()
+        {
+            try
+            {
+                string dir = Path.GetDirectoryName(AutoSaveOptionsPath);
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                using (StreamWriter fileout = new StreamWriter(AutoSaveOptionsPath, false))
+                {
+                    StoreData(fileout);
+                }
+            }
+            catch
+            {
+                // Auto-save must never interrupt the user; manual Save Options still works.
             }
         }
 

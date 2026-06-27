@@ -1,10 +1,8 @@
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Collections;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using SlimDX;
-using SlimDX.Direct3D9;
 using System.IO;
 
 namespace L2_login
@@ -18,10 +16,7 @@ namespace L2_login
         private ArrayList tmp_path = new ArrayList();
         private ArrayList tmp_walls = new ArrayList();
 
-        private Device dxDevice;
-        private Sprite dxTextSprite;
-        private SlimDX.Direct3D9.Font dxFont;
-        private Line dxLine;
+        private Graphics gfx;
 
         private const int wid = 200;
         private const int wid_2 = wid / 2;
@@ -80,12 +75,10 @@ namespace L2_login
         public static Color text_color_shadow;
 
         public static System.Drawing.Font drawFont = new System.Drawing.Font("Arial", 10);
-        private PresentParameters presentParams = new PresentParameters();
+        private static readonly StringFormat centerFormat = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Near };
 
         private volatile bool LoadTextures = false;
         private DateTime LastTextureLoad = new DateTime(0L);
-        private volatile bool resized = false;
-        private volatile bool resources_created = false;
 
         public PictureBox pictureBox_test;
 
@@ -102,38 +95,6 @@ namespace L2_login
             MdiParent_Resize(null, null);
 
             LoadMiniMap();
-            Init_DX();
-        }
-
-        private void Init_DX()
-        {
-            presentParams.Windowed = true;
-            presentParams.SwapEffect = SwapEffect.Discard;
-            presentParams.BackBufferWidth = this.Width;//ClientSize
-            presentParams.BackBufferHeight = this.Height;//ClientSize
-
-            if (Globals.Use_Hardware_Acceleration)
-            {
-                dxDevice = new Device(new Direct3D(), 0, DeviceType.Hardware, this.pictureBox_test.Handle, CreateFlags.HardwareVertexProcessing, presentParams);
-            }
-            else
-            {
-                dxDevice = new Device(new Direct3D(), 0, DeviceType.Hardware, this.pictureBox_test.Handle, CreateFlags.SoftwareVertexProcessing, presentParams);
-            }
-
-            this.Resize += new EventHandler(Map_Resize);
-        }
-
-        private void Init_Resources()
-        {
-            resources_created = true;
-
-            System.Drawing.Font theFont = new System.Drawing.Font("Arial", 10f, FontStyle.Regular, GraphicsUnit.Pixel);
-            dxFont = new SlimDX.Direct3D9.Font(dxDevice, theFont);
-
-            dxTextSprite = new Sprite(dxDevice);
-
-            dxLine = new Line(dxDevice);
 
             LastTextureLoad = DateTime.Now.AddMilliseconds(500);
             LoadTextures = true;
@@ -141,26 +102,6 @@ namespace L2_login
 
         private void UnloadResources()
         {
-            resources_created = false;
-
-            if (dxFont != null)
-            {
-                dxFont.Dispose();
-                dxFont = null;
-            }
-
-            if (dxTextSprite != null)
-            {
-                dxTextSprite.Dispose();
-                dxTextSprite = null;
-            }
-
-            if (dxLine != null)
-            {
-                dxLine.Dispose();
-                dxLine = null;
-            }
-
             foreach (MapData map in maps)
             {
                 try
@@ -178,14 +119,21 @@ namespace L2_login
             }
         }
 
-        void Map_Resize(object sender, EventArgs e)
-        {
-            resized = true;
-        }
-
         protected override void Dispose(bool disposing)
         {
             this.MdiParent.Resize -= new EventHandler(MdiParent_Resize);
+
+            if (disposing)
+            {
+                UnloadResources();
+
+                if (this.pictureBox_test.Image != null)
+                {
+                    Bitmap oldImage = (Bitmap)this.pictureBox_test.Image;
+                    this.pictureBox_test.Image = null;
+                    oldImage.Dispose();
+                }
+            }
 
             base.Dispose(disposing);
         }
@@ -248,42 +196,8 @@ namespace L2_login
             {
                 if (this.Width > 100 && this.Height > 100)
                 {
-                    if (resized)
-                    {
-                        resized = false;
-
-                        UnloadResources();
-
-                        presentParams.BackBufferWidth = this.Width;//ClientSize
-                        presentParams.BackBufferHeight = this.Height;//ClientSize
-
-                        dxDevice.Reset(presentParams);
-
-                        LastTextureLoad = DateTime.Now.AddMilliseconds(500);
-                        LoadTextures = true;
-                    }
-
                     ClearUnusedMaps();
-
-                    Result res = dxDevice.TestCooperativeLevel();
-
-                    if (res == ResultCode.Success)
-                    {
-                        if (!resources_created)
-                        {
-                            Init_Resources();
-                        }
-                        DrawGame();
-                    }
-                    if (res == ResultCode.DeviceNotReset)
-                    {
-                        dxDevice.Reset(presentParams);//Reset the device.
-                        Init_Resources();
-                    }
-                    if (res == ResultCode.DeviceLost)
-                    {
-                        UnloadResources();
-                    }
+                    DrawGame();
                 }
                 else
                 {
@@ -298,20 +212,31 @@ namespace L2_login
 
         protected void DrawGame()
         {
-            dxDevice.Clear(ClearFlags.Target, Color.White, 1.0f, 0);
-            dxDevice.BeginScene();
+            Bitmap backBuffer = new Bitmap(Math.Max(this.Width, 1), Math.Max(this.Height, 1));
 
-            DrawGameInner();
-
-            dxDevice.EndScene();
             try
             {
-                dxDevice.Present();
-                //dxDevice.Present(this.Handle);
+                using (Graphics g = Graphics.FromImage(backBuffer))
+                {
+                    gfx = g;
+                    g.Clear(Color.White);
+
+                    DrawGameInner();
+                }
+
+                Bitmap oldImage = (Bitmap)this.pictureBox_test.Image;
+                this.pictureBox_test.Image = backBuffer;
+                oldImage?.Dispose();
             }
-            catch //(DeviceLostException)
+            catch
             {
-                UnloadResources();
+                //if DrawGameInner threw past its own internal try/catch blocks,
+                //make sure the freshly allocated backBuffer doesn't leak its GDI handle
+                backBuffer.Dispose();
+            }
+            finally
+            {
+                gfx = null;
             }
         }
 
@@ -1090,10 +1015,6 @@ namespace L2_login
 
             float Tu1 = 0, Tv1 = 0, Tu2 = 1, Tv2 = 1;
 
-            //scale the texture coords
-            float texture_width = Math.Abs(lx) + Math.Abs(mx);
-            float texture_height = Math.Abs(ly) + Math.Abs(my);
-
             if (lx < 0)
             {
                 Tu1 = (0 - _lx) / ((float)(_mx - _lx));
@@ -1118,142 +1039,81 @@ namespace L2_login
                 my = Height;
             }
 
-            VertexBuffer Vertices = new VertexBuffer(dxDevice, 6 * Marshal.SizeOf(typeof(Vertex)), Usage.WriteOnly, VertexFormat.None, Pool.Managed);
+            if (mx <= lx || my <= ly)
+            {
+                return;
+            }
 
-            DataStream stream = Vertices.Lock(0, 0, LockFlags.None);
-            Vertex[] vertexData = new Vertex[6];
-            vertexData[0].Position = new Vector4(lx, ly, 0f, 1f);
-            vertexData[0].Color = Color.White.ToArgb();
-            vertexData[0].Tu = Tu1;
-            vertexData[0].Tv = Tv1;
+            Bitmap tex = map.dxTexture;
+            int srcX = (int)(Tu1 * tex.Width);
+            int srcY = (int)(Tv1 * tex.Height);
+            int srcW = (int)((Tu2 - Tu1) * tex.Width);
+            int srcH = (int)((Tv2 - Tv1) * tex.Height);
 
-            vertexData[1].Position = new Vector4(mx, my, 0f, 1f);
-            vertexData[1].Color = Color.White.ToArgb();
-            vertexData[1].Tu = Tu2;
-            vertexData[1].Tv = Tv2;
+            if (srcW <= 0 || srcH <= 0)
+            {
+                return;
+            }
 
-            vertexData[2].Position = new Vector4(lx, my, 0f, 1f);
-            vertexData[2].Color = Color.White.ToArgb();
-            vertexData[2].Tu = Tu1;
-            vertexData[2].Tv = Tv2;
-
-            vertexData[3].Position = new Vector4(mx, my, 0f, 1f);
-            vertexData[3].Color = Color.White.ToArgb();
-            vertexData[3].Tu = Tu2;
-            vertexData[3].Tv = Tv2;
-
-            vertexData[4].Position = new Vector4(lx, ly, 0f, 1f);
-            vertexData[4].Color = Color.White.ToArgb();
-            vertexData[4].Tu = Tu1;
-            vertexData[4].Tv = Tv1;
-
-            vertexData[5].Position = new Vector4(mx, ly, 0f, 1f);
-            vertexData[5].Color = Color.White.ToArgb();
-            vertexData[5].Tu = Tu2;
-            vertexData[5].Tv = Tv1;
-            stream.WriteRange(vertexData);
-            Vertices.Unlock();
-
+            InterpolationMode oldMode = gfx.InterpolationMode;
             switch (Globals.Texture_Mode)
             {
                 case 1:
-                    dxDevice.SetSamplerState(0, SamplerState.MagFilter, TextureFilter.Linear);
+                    gfx.InterpolationMode = InterpolationMode.Bilinear;
                     break;
                 case 2:
-                    dxDevice.SetSamplerState(0, SamplerState.MagFilter, TextureFilter.GaussianQuad);
+                    gfx.InterpolationMode = InterpolationMode.HighQualityBicubic;
                     break;
                 default:
-                    dxDevice.SetSamplerState(0, SamplerState.MagFilter, TextureFilter.Point);//TextureFilter.None
+                    gfx.InterpolationMode = InterpolationMode.NearestNeighbor;
                     break;
             }
 
-            dxDevice.SetTexture(0, map.dxTexture);
-            dxDevice.SetStreamSource(0, Vertices, 0, Marshal.SizeOf(typeof(Vertex)));
-            dxDevice.VertexFormat = VertexFormat.PositionRhw | VertexFormat.Diffuse | VertexFormat.Texture1;
+            gfx.DrawImage(tex, new Rectangle(lx, ly, mx - lx, my - ly), new Rectangle(srcX, srcY, srcW, srcH), GraphicsUnit.Pixel);
 
-            dxDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 2);
-            dxDevice.SetTexture(0, null);
-
-            stream.Close();
-            Vertices.Dispose();
+            gfx.InterpolationMode = oldMode;
         }
 
         private void DrawFilledBox(int x1, int y1, int x2, int y2, Color col)
         {
-            VertexBuffer Vertices = new VertexBuffer(dxDevice, 6 * Marshal.SizeOf(typeof(Vertex)), Usage.WriteOnly, VertexFormat.None, Pool.Managed);
+            int x = Math.Min(x1, x2);
+            int y = Math.Min(y1, y2);
+            int w = Math.Abs(x2 - x1);
+            int h = Math.Abs(y2 - y1);
 
-            DataStream stream = Vertices.Lock(0, 0, LockFlags.None);
-            Vertex[] vertexData = new Vertex[6];
-            vertexData[0].Position = new Vector4(x1, y1, 0f, 1f);
-            vertexData[0].Color = col.ToArgb();
-            vertexData[1].Position = new Vector4(x2, y1, 0f, 1f);
-            vertexData[1].Color = col.ToArgb();
-            vertexData[2].Position = new Vector4(x2, y2, 0f, 1f);
-            vertexData[2].Color = col.ToArgb();
-
-            vertexData[3].Position = new Vector4(x2, y2, 0f, 1f);
-            vertexData[3].Color = col.ToArgb();
-            vertexData[4].Position = new Vector4(x1, y2, 0f, 1f);
-            vertexData[4].Color = col.ToArgb();
-            vertexData[5].Position = new Vector4(x1, y1, 0f, 1f);
-            vertexData[5].Color = col.ToArgb();
-            stream.WriteRange(vertexData);
-            Vertices.Unlock();
-
-            dxDevice.SetStreamSource(0, Vertices, 0, Marshal.SizeOf(typeof(Vertex)));
-            dxDevice.VertexFormat = VertexFormat.PositionRhw | VertexFormat.Diffuse | VertexFormat.Texture1;
-
-            dxDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 2);
-
-            stream.Close();
-            Vertices.Dispose();
+            using (SolidBrush b = new SolidBrush(col))
+            {
+                gfx.FillRectangle(b, x, y, w, h);
+            }
         }
 
         private void DrawBox(int x1, int y1, int x2, int y2, Color col)
         {
-            dxLine.Begin();
+            int x = Math.Min(x1, x2);
+            int y = Math.Min(y1, y2);
+            int w = Math.Abs(x2 - x1);
+            int h = Math.Abs(y2 - y1);
 
-            Vector2[] vLine = new Vector2[2];
-            vLine[0] = new Vector2(x1, y1);
-            vLine[1] = new Vector2(x2, y1);
-            dxLine.Draw(vLine, col);
-
-            vLine = new Vector2[2];
-            vLine[0] = new Vector2(x2, y1);
-            vLine[1] = new Vector2(x2, y2);
-            dxLine.Draw(vLine, col);
-
-            vLine = new Vector2[2];
-            vLine[0] = new Vector2(x2, y2);
-            vLine[1] = new Vector2(x1, y2);
-            dxLine.Draw(vLine, col);
-
-            vLine = new Vector2[2];
-            vLine[0] = new Vector2(x1, y2);
-            vLine[1] = new Vector2(x1, y1);
-            dxLine.Draw(vLine, col);
-
-            dxLine.End();
+            using (Pen p = new Pen(col))
+            {
+                gfx.DrawRectangle(p, x, y, w, h);
+            }
         }
 
         private void DrawLine(int x1, int y1, int x2, int y2, Color col)
         {
-            dxLine.Begin();
-
-            Vector2[] vLine = new Vector2[2];
-            vLine[0] = new Vector2(x1, y1);
-            vLine[1] = new Vector2(x2, y2);
-            dxLine.Draw(vLine, col);
-
-            dxLine.End();
+            using (Pen p = new Pen(col))
+            {
+                gfx.DrawLine(p, x1, y1, x2, y2);
+            }
         }
 
         private void DrawText(string text, int x, int y, int w, int h, Color col)
         {
-            dxTextSprite.Begin(SpriteFlags.AlphaBlend);
-            Rectangle tr = new Rectangle(x, y, w, h);
-            dxFont.DrawString(dxTextSprite, text, tr, DrawTextFormat.Center, col);
-            dxTextSprite.End();
+            using (SolidBrush b = new SolidBrush(col))
+            {
+                gfx.DrawString(text, drawFont, b, new RectangleF(x, y, w, h), centerFormat);
+            }
         }
 
         private int GetScaledX(float x)
@@ -1658,8 +1518,14 @@ namespace L2_login
                 {
                     map.Image.Position = 0;
 
-                    map.dxTexture = Texture.FromStream(dxDevice, map.Image, Usage.None, Pool.Managed);
-                    //map.dxTexture = Texture.FromStream(dxDevice, stream, map.Image.Width, map.Image.Height, 0, Usage.Dynamic, Format.R8G8B8, Pool.Managed, Filter.None, Filter.None, 0);*/
+                    //Bitmap(Stream) lazily keeps a reference to the source stream; MapData's
+                    //MemoryStream is released (MAP_HOLD_STREAM = 5min) well before the texture
+                    //cache expires (MAP_HOLD_TEXTURE = 60min), so we clone into an independent
+                    //Bitmap that owns its own pixel buffer and doesn't depend on the stream.
+                    using (Bitmap decoded = new Bitmap(map.Image))
+                    {
+                        map.dxTexture = new Bitmap(decoded);
+                    }
                     LastTextureLoad = DateTime.Now;
                     return;
                 }

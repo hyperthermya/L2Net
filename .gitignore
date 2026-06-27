@@ -1,8 +1,19 @@
 *.config
 *.resources
 *.manifest
-obj/x86/
-bin/Release/
-bin/Debug/
+obj/
+bin/
 packages/
 .vs/
+
+# Local-only working files (notes, audit logs, scratch tools) - never pushed.
+# Keep anything you don't want on GitHub inside local/ instead of scattering
+# exclusions around the repo.
+local/
+
+# AI assistant tool config/working directories - must stay at this exact path
+# for the respective tool to find them, so they can't just live in local/.
+.claude/
+.kilo/
+.kilocode/
+.temp_create_data/

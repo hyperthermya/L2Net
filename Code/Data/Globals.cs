@@ -49,7 +49,8 @@ namespace L2_login
         public const string Map_Salt = "QaABcmPq$]@H+2u4NXxG";
 
         public const string Name = "L2.Net";
-        public const string Version = "June 3, 2018";
+        public const string Version = "June 2026";
+        public const string Runtime = ".NET 10 (migrated from .NET Framework)";
         public const string VersionLetter = "https://github.com/devmvalvm/L2Net";
         public const int MinDataPack = 392;
         public static string PATH = "";
@@ -519,7 +520,7 @@ namespace L2_login
         public static bool AllowFiles = true;
         public static bool ScriptCompatibilityv386 = false;
         public static string L2Path = "";
-        public static System.Windows.Forms.MainMenu back_menu;
+        public static System.Windows.Forms.MenuStrip back_menu;
         //end of option stuff
 
         public static ArrayList Bannedkeys = new ArrayList();

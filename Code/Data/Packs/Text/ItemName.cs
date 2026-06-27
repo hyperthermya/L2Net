@@ -81,10 +81,12 @@ namespace L2_login
             int pipe = 0, oldpipe = 0;
             //ID
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             ID = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Drop Mesh 1
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             string mesh = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             if (mesh.Length > 0)
@@ -97,33 +99,41 @@ namespace L2_login
             }
             //Icon 0
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Icon = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             //Durability
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Durability = Util.GetInt64(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Weight
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Weight = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Material
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Material = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Crystallizable
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Crystallizable = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Stackable
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Stackable = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Family
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Family = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Grade
+            if (oldpipe > inp.Length) { return; }
             Grade = Util.GetUInt32(inp.Substring(oldpipe, inp.Length - oldpipe));
         }
 
@@ -156,10 +166,12 @@ namespace L2_login
             int pipe = 0, oldpipe = 0;
             //ID
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             ID = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Drop Mesh 1
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             string mesh = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             if (mesh.Length > 0)
@@ -172,34 +184,42 @@ namespace L2_login
             }
             //Icon 0
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Icon = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             //Durability
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Durability = Util.GetInt64(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Weight
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Weight = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Material
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Material = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Crystallizable
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Crystallizable = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Body_Part
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Body_Part = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Hardness
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Hardness = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Random_Damage
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Random_Damage = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //PAtt
@@ -214,10 +234,12 @@ namespace L2_login
             */
             //Weapon_Type
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Weapon_Type = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Crystal_Type
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Crystal_Type = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             /*
@@ -248,21 +270,26 @@ namespace L2_login
             */
             //MP_Consume
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             MP_Consume = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //SS
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             SS = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //SPS
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             SPS = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Curvature
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Curvature = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //isHero
+            if (oldpipe > inp.Length) { return; }
             isHero = Util.GetInt32(inp.Substring(oldpipe, inp.Length - oldpipe));
         }
 
@@ -325,10 +352,12 @@ namespace L2_login
             int pipe = 0, oldpipe = 0;
             //ID
             pipe = inp.IndexOf('|');
+            if (pipe == -1) { return; }
             ID = Util.GetUInt32(inp.Substring(0, pipe));
             oldpipe = pipe + 1;
             //Drop Mesh 1
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             string mesh = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             if (mesh.Length > 0)
@@ -341,38 +370,47 @@ namespace L2_login
             }
             //Icon 0
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Icon = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             //Durability
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Durability = Util.GetInt64(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Weight
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Weight = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Material
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Material = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Crystallizable
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Crystallizable = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Body_Part
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Body_Part = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Armor_Type
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Armor_Type = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Crystal_Type
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             Crystal_Type = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Avoid_Mod
             pipe = inp.IndexOf('|', oldpipe);
+            if (oldpipe > inp.Length) { return; }
             Avoid_Mod = Util.GetInt32(inp.Substring(oldpipe, inp.Length - oldpipe));
             /*
             oldpipe = pipe + 1;
@@ -426,18 +464,22 @@ namespace L2_login
             int pipe = 0, oldpipe = 0;
             //ID
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { return; }
             ID = Util.GetUInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Name
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { Name = oldpipe <= inp.Length ? inp.Substring(oldpipe) : ""; return; }
             Name = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             //Add_Name
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { Add_Name = oldpipe <= inp.Length ? inp.Substring(oldpipe) : ""; return; }
             Add_Name = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             //Description
             pipe = inp.IndexOf('|', oldpipe);
+            if (pipe == -1) { Description = oldpipe <= inp.Length ? inp.Substring(oldpipe) : ""; return; }
             Description = inp.Substring(oldpipe, pipe - oldpipe);
             oldpipe = pipe + 1;
             //Special_Enchant_Amount
@@ -450,7 +492,7 @@ namespace L2_login
             Special_Enchant_Amount = Util.GetInt32(inp.Substring(oldpipe, pipe - oldpipe));
             oldpipe = pipe + 1;
             //Special_Enchant_Desc
-            Special_Enchant_Desc = inp.Substring(oldpipe, inp.Length - oldpipe);
+            Special_Enchant_Desc = oldpipe <= inp.Length ? inp.Substring(oldpipe) : "";
         }
     }//end of ItemName
 }

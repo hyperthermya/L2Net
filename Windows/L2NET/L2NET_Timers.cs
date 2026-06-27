@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace L2_login
@@ -113,7 +113,7 @@ namespace L2_login
             float y = Globals.gamedata.my_char.Y;
             float z = Globals.gamedata.my_char.Z;
 
-            ArrayList dirty_items = new ArrayList();
+            List<int> dirty_items = new List<int>();
 
             for (int i = 0; i < listView_players_data_items.Count; i++)
             {
@@ -151,7 +151,7 @@ namespace L2_login
             //need to remove all dirty items now
             for (int i = dirty_items.Count - 1; i >= 0; i--)
             {
-                listView_players_data_items.RemoveAt((int)dirty_items[i]);
+                listView_players_data_items.RemoveAt(dirty_items[i]);
             }
             dirty_items.Clear();
 
@@ -256,7 +256,7 @@ namespace L2_login
 
         private void UpdateItemsListInternal()
         {
-            ArrayList dirty_items = new ArrayList();
+            List<int> dirty_items = new List<int>();
 
             for (int i = 0; i < listView_items_data_items.Count; i++)
             {
@@ -282,7 +282,7 @@ namespace L2_login
             //need to remove all dirty items now
             for (int i = dirty_items.Count - 1; i >= 0; i--)
             {
-                listView_items_data_items.RemoveAt((int)dirty_items[i]);
+                listView_items_data_items.RemoveAt(dirty_items[i]);
             }
             dirty_items.Clear();
 
@@ -364,7 +364,7 @@ namespace L2_login
 
         private void UpdateNPCListInternal()
         {
-            ArrayList dirty_items = new ArrayList();
+            List<int> dirty_items = new List<int>();
 
             for (int i = 0; i < listView_npc_data.Items.Count; i++)
             {
@@ -391,7 +391,7 @@ namespace L2_login
             //need to remove all dirty items now
             for (int i = dirty_items.Count - 1; i >= 0; i--)
             {
-                listView_npc_data_items.RemoveAt((int)dirty_items[i]);
+                listView_npc_data_items.RemoveAt(dirty_items[i]);
             }
             dirty_items.Clear();
 
@@ -474,7 +474,7 @@ namespace L2_login
 
         private void UpdateInventoryListInternal()
         {
-            ArrayList dirty_items = new ArrayList();
+            List<int> dirty_items = new List<int>();
             #region Equipped Items
             if (radioButton_inv_equipped.Checked)
             {
@@ -528,7 +528,7 @@ namespace L2_login
                 //need to remove all dirty items now
                 for (int i = dirty_items.Count - 1; i >= 0; i--)
                 {
-                    listView_inventory_items.RemoveAt((int)dirty_items[i]);
+                    listView_inventory_items.RemoveAt(dirty_items[i]);
                 }
                 dirty_items.Clear();
 
@@ -622,7 +622,7 @@ namespace L2_login
                 //need to remove all dirty items now
                 for (int i = dirty_items.Count - 1; i >= 0; i--)
                 {
-                    listView_inventory_items.RemoveAt((int)dirty_items[i]);
+                    listView_inventory_items.RemoveAt(dirty_items[i]);
                 }
                 dirty_items.Clear();
 
@@ -716,7 +716,7 @@ namespace L2_login
                 //need to remove all dirty items now
                 for (int i = dirty_items.Count - 1; i >= 0; i--)
                 {
-                    listView_inventory_items.RemoveAt((int)dirty_items[i]);
+                    listView_inventory_items.RemoveAt(dirty_items[i]);
                 }
                 dirty_items.Clear();
 
@@ -812,7 +812,7 @@ namespace L2_login
 
         private void UpdateMyBuffsListInternal()
         {
-            ArrayList dirty_items = new ArrayList();
+            List<int> dirty_items = new List<int>();
 
             for (int i = 0; i < listView_mybuffs_data.Items.Count; i++)
             {
@@ -848,7 +848,7 @@ namespace L2_login
             //need to remove all dirty items now
             for (int i = dirty_items.Count - 1; i >= 0; i--)
             {
-                listView_mybuffs_data_items.RemoveAt((int)dirty_items[i]);
+                listView_mybuffs_data_items.RemoveAt(dirty_items[i]);
             }
             dirty_items.Clear();
 
