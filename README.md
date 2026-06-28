@@ -28,7 +28,7 @@ The project has been migrated from .NET Framework / SlimDX to **.NET 10** (Windo
 
 ## Compiling
 ```bash
-git clone https://github.com/devmvalvm/L2Net.git
+git clone https://github.com/hyperthermya/L2Net.git
 cd L2Net
 dotnet restore
 dotnet build L2NET.csproj
