@@ -479,11 +479,11 @@ namespace L2_login
                         //Summon instant attack
                         if (Globals.gamedata.botoptions.SummonInstantAttack == 1)
                         {
-                            if (Globals.gamedata.botoptions.PetAssist == 1)
+                            if (Globals.gamedata.botoptions.PetAssist == 1 && Globals.gamedata.my_pet.ID != 0)
                             {
                                 ServerPackets.Use_Action_Parse((uint)PClientAction.Pet_Attack, Globals.gamedata.Control, Globals.gamedata.Shift);
                             }
-                            if (Globals.gamedata.botoptions.SummonAssist == 1)
+                            if (Globals.gamedata.botoptions.SummonAssist == 1 && Util.HasActiveSummon() && Util.SummonDistanceToTarget(Globals.gamedata.my_char.TargetID) <= Globals.gamedata.botoptions.SummonAttackRange)
                             {
                                 ServerPackets.Use_Action_Parse((uint)PClientAction.Summon_Attack, Globals.gamedata.Control, Globals.gamedata.Shift);
                             }
@@ -1159,11 +1159,11 @@ namespace L2_login
                 //time to kill our target
                 if (Globals.gamedata.botoptions.SummonInstantAttack != 1) //if summon is not already attacking (assisting master)
                 {
-                    if (Globals.gamedata.botoptions.PetAssist == 1)
+                    if (Globals.gamedata.botoptions.PetAssist == 1 && Globals.gamedata.my_pet.ID != 0)
                     {
                         ServerPackets.Use_Action_Parse((uint)PClientAction.Pet_Attack, Globals.gamedata.Control, Globals.gamedata.Shift);
                     }
-                    if (Globals.gamedata.botoptions.SummonAssist == 1)
+                    if (Globals.gamedata.botoptions.SummonAssist == 1 && Util.HasActiveSummon() && Util.SummonDistanceToTarget(Globals.gamedata.my_char.TargetID) <= Globals.gamedata.botoptions.SummonAttackRange)
                     {
                         ServerPackets.Use_Action_Parse((uint)PClientAction.Summon_Attack, Globals.gamedata.Control, Globals.gamedata.Shift);
                     }
@@ -1902,6 +1902,7 @@ namespace L2_login
                     float vx, vy, vz;
                     float vxx;
                     float THRESHOLDs2;
+                    float followDistance;
 
                     if (Globals.gamedata.botoptions.ActiveFollowStyle == 0)
                     {//l2.net style follow
@@ -1909,6 +1910,7 @@ namespace L2_login
                         vy = player.Y - Globals.gamedata.my_char.Y;
                         vz = player.Z - Globals.gamedata.my_char.Z;
                         THRESHOLDs2 = Globals.THRESHOLD_L2NET;
+                        followDistance = Globals.gamedata.botoptions.ActiveFollowDistance2;
                     }
                     else
                     {//walker style follow
@@ -1925,17 +1927,18 @@ namespace L2_login
                             vz = player.Z - Globals.gamedata.my_char.Z;
                         }
                         THRESHOLDs2 = 0;
+                        followDistance = Globals.gamedata.botoptions.ActiveFollowDistance;
                     }
 
                     vxx = Convert.ToSingle(Math.Sqrt(vx * vx + vy * vy + vz * vz));
 
-                    if (vxx < Globals.gamedata.botoptions.ActiveFollowDistance + Globals.THRESHOLD + THRESHOLDs2)
+                    if (vxx < followDistance + Globals.THRESHOLD + THRESHOLDs2)
                     {
                         //we are close enough
                     }
                     else
                     {
-                        float ratio = Util.Float_Cap(1.0F - (Globals.gamedata.botoptions.ActiveFollowDistance / vxx));
+                        float ratio = Util.Float_Cap(1.0F - (followDistance / vxx));
 
                         if (ratio == 0)
                         {

@@ -9,7 +9,8 @@ namespace L2_login
         private string _ActiveFollowName = "";
         public volatile uint ActiveFollowID = 0;
         public volatile int ActiveFollowStyle = 0;//1 - walker style | 0 - l2.net style(move to pawn)
-        public volatile float ActiveFollowDistance = 200;
+        public volatile float ActiveFollowDistance = 200; //walker style follow distance
+        public volatile float ActiveFollowDistance2 = 200; //l2.net style follow distance
         public volatile int ActiveFollowAttack = 0;//1 - yes
         public volatile int ActiveFollowAttackInstant = 0; //1 = yes
         public volatile int ActiveFollowTarget = 0;//1 - yes
@@ -67,6 +68,7 @@ namespace L2_login
         public volatile int SummonAssist = 0; //1 = yes
         public volatile int PetAttackSolo = 0; //1 = yes
         public volatile int SummonInstantAttack = 0; //1 = yes
+        public volatile int SummonAttackRange = 200; //max distance (summon to target) before we stop sending the summon attack action
         /* Advanced */
         public volatile int AntiKSDelay = 5;
         public volatile int AutoFollowDelay = 5;

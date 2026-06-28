@@ -69,24 +69,24 @@ namespace L2_login
                            // }
                         }*/
 
-#if DEBUG
-
-                        //need to output to the send to game file
-                        Globals.gamedatato.WriteLine(" :::time:::" + DateTime.Now.TimeOfDay.ToString() + ":::");
-                        Globals.gamedatato.WriteLine("-data from bot to gameserver hex-");
-                        for (uint i = 0; i < buff.Length; i++)
+                        if (Globals.DebugPacketLog)
                         {
-                            Globals.gamedatato.Write(buff[i].ToString("X2"));
-                            Globals.gamedatato.Write(" ");
+                            //need to output to the send to game file
+                            Globals.gamedatato.WriteLine(" :::time:::" + DateTime.Now.TimeOfDay.ToString() + ":::");
+                            Globals.gamedatato.WriteLine("-data from bot to gameserver hex-");
+                            for (uint i = 0; i < buff.Length; i++)
+                            {
+                                Globals.gamedatato.Write(buff[i].ToString("X2"));
+                                Globals.gamedatato.Write(" ");
+                            }
+                            Globals.gamedatato.WriteLine("");
+                            Globals.gamedatato.WriteLine("-data from bot to gameserver string-");
+                            for (int i = 0; i < buff.Length; i++)
+                            {
+                                Globals.gamedatato.Write((char)buff[i]);
+                            }
+                            Globals.gamedatato.WriteLine("");
                         }
-                        Globals.gamedatato.WriteLine("");
-                        Globals.gamedatato.WriteLine("-data from bot to gameserver string-");
-                        for (int i = 0; i < buff.Length; i++)
-                        {
-                            Globals.gamedatato.Write((char)buff[i]);
-                        }
-                        Globals.gamedatato.WriteLine("");
-#endif
 
                         /*if (L2NET.Mixer != null)
                         {
@@ -184,24 +184,24 @@ namespace L2_login
                             Globals.pck_thread.mine_queue.Enqueue(pck_dat);
                             //* }
                         }
-#if DEBUG
-
-                        //need to output to the send to gameserver log file
-                        Globals.gamedataout.WriteLine("-size: " + size.ToString() + " -count:" + cnt.ToString() + " :::time:::" + DateTime.Now.TimeOfDay.ToString() + ":::");
-                        Globals.gamedataout.WriteLine("-data from game server to bot hex-");
-                        for (uint i = 0; i < size - 2; i++)
+                        if (Globals.DebugPacketLog)
                         {
-                            Globals.gamedataout.Write(buffpacket[i].ToString("X2"));
-                            Globals.gamedataout.Write(" ");
+                            //need to output to the send to gameserver log file
+                            Globals.gamedataout.WriteLine("-size: " + size.ToString() + " -count:" + cnt.ToString() + " :::time:::" + DateTime.Now.TimeOfDay.ToString() + ":::");
+                            Globals.gamedataout.WriteLine("-data from game server to bot hex-");
+                            for (uint i = 0; i < size - 2; i++)
+                            {
+                                Globals.gamedataout.Write(buffpacket[i].ToString("X2"));
+                                Globals.gamedataout.Write(" ");
+                            }
+                            Globals.gamedataout.WriteLine("");
+                            Globals.gamedataout.WriteLine("-data from game server to bot string-");
+                            for (uint i = 0; i < size - 2; i++)
+                            {
+                                Globals.gamedataout.Write((char)buffpacket[i]);
+                            }
+                            Globals.gamedataout.WriteLine("");
                         }
-                        Globals.gamedataout.WriteLine("");
-                        Globals.gamedataout.WriteLine("-data from game server to bot string-");
-                        for (uint i = 0; i < size - 2; i++)
-                        {
-                            Globals.gamedataout.Write((char)buffpacket[i]);
-                        }
-                        Globals.gamedataout.WriteLine("");
-#endif
 
                         if (Globals.DumpModeServer)
                         {

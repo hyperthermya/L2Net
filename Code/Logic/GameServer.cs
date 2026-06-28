@@ -10,6 +10,24 @@ namespace L2_login
 
             Globals.PATH = Environment.CurrentDirectory;
 
+            foreach (string arg in args)
+            {
+                if (string.Equals(arg, "-debug", StringComparison.OrdinalIgnoreCase) || string.Equals(arg, "--debug", StringComparison.OrdinalIgnoreCase))
+                {
+                    Globals.DebugPacketLog = true;
+                }
+            }
+
+            try
+            {
+                Directory.CreateDirectory(Globals.PATH + "\\logs\\");
+            }
+            catch
+            {
+                //folder creation failed (permissions?) - the StreamWriter calls below will fail
+                //with their own error handling, no need to duplicate that here
+            }
+
             try
             {
                 if (Globals.LogWriting)
@@ -28,23 +46,24 @@ namespace L2_login
                 Globals.l2net_home.Add_PopUpError("failed to create text output log file... do you have the datapack?" + Environment.NewLine + "L2.net needs write/create access to the \\logs\\ folder to log chat.");
             }
 
-#if DEBUG
-            try
+            if (Globals.DebugPacketLog)
             {
-                Globals.gamedataout = new StreamWriter(Globals.PATH + "\\logs\\from_gamelog.txt");
-                Globals.gamedatato = new StreamWriter(Globals.PATH + "\\logs\\to_gamelog.txt");
-                Globals.clientdataout = new StreamWriter(Globals.PATH + "\\logs\\from_clientlog.txt");
-                Globals.clientdatato = new StreamWriter(Globals.PATH + "\\logs\\to_clientlog.txt");
+                try
+                {
+                    Globals.gamedataout = new StreamWriter(Globals.PATH + "\\logs\\from_gamelog.txt");
+                    Globals.gamedatato = new StreamWriter(Globals.PATH + "\\logs\\to_gamelog.txt");
+                    Globals.clientdataout = new StreamWriter(Globals.PATH + "\\logs\\from_clientlog.txt");
+                    Globals.clientdatato = new StreamWriter(Globals.PATH + "\\logs\\to_clientlog.txt");
 
-                Globals.gamedataout.AutoFlush = true;
-                Globals.gamedatato.AutoFlush = true;
-                Globals.clientdataout.AutoFlush = true;
-                Globals.clientdatato.AutoFlush = true;
+                    Globals.gamedataout.AutoFlush = true;
+                    Globals.gamedatato.AutoFlush = true;
+                    Globals.clientdataout.AutoFlush = true;
+                    Globals.clientdatato.AutoFlush = true;
+                }
+                catch
+                {
+                }
             }
-            catch
-            {
-            }
-#endif
 
             //set up all the arraylists for data
             Globals.gamedata.my_char = new Player_Info();

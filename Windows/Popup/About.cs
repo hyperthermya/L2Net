@@ -142,7 +142,7 @@ namespace L2_login
             this.linkLabel_http.Size = new System.Drawing.Size(300, 20);
             this.linkLabel_http.TabIndex = 14;
             this.linkLabel_http.TabStop = true;
-            this.linkLabel_http.Text = "https://github.com/devmvalvm/L2Net";
+            this.linkLabel_http.Text = "https://github.com/hyperthermya/L2Net";
             this.linkLabel_http.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.linkLabel_http.LinkClicked += new LinkLabelLinkClickedEventHandler(this.linkLabel_http_LinkClicked);
             //

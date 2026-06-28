@@ -485,6 +485,11 @@ namespace L2_login
             return;
         }
 
+        public static bool HasActiveSummon()
+        {
+            return Globals.gamedata.my_pet.ID != 0 || Globals.gamedata.my_pet1.ID != 0 || Globals.gamedata.my_pet2.ID != 0 || Globals.gamedata.my_pet3.ID != 0;
+        }
+
         public static TargetType GetType(uint id)
         {
             if (id == 0)

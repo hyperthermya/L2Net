@@ -375,12 +375,13 @@ namespace L2_login
             {
                 try
                 {
-#if DEBUG
-                    Globals.gamedataout.Flush();
-                    Globals.gamedatato.Flush();
-                    Globals.clientdataout.Flush();
-                    Globals.clientdatato.Flush();
-#endif
+                    if (Globals.DebugPacketLog)
+                    {
+                        Globals.gamedataout.Flush();
+                        Globals.gamedatato.Flush();
+                        Globals.clientdataout.Flush();
+                        Globals.clientdatato.Flush();
+                    }
 
                     Globals.text_out.Flush();
                 }
@@ -427,17 +428,18 @@ namespace L2_login
             Globals.pck_thread.stop();
             try
             {
-#if DEBUG
-                Globals.gamedatato.Flush();
-                Globals.gamedataout.Flush();
-                Globals.clientdatato.Flush();
-                Globals.clientdataout.Flush();
+                if (Globals.DebugPacketLog)
+                {
+                    Globals.gamedatato.Flush();
+                    Globals.gamedataout.Flush();
+                    Globals.clientdatato.Flush();
+                    Globals.clientdataout.Flush();
 
-                Globals.gamedatato.Close();
-                Globals.gamedataout.Close();
-                Globals.clientdatato.Close();
-                Globals.clientdataout.Close();
-#endif
+                    Globals.gamedatato.Close();
+                    Globals.gamedataout.Close();
+                    Globals.clientdatato.Close();
+                    Globals.clientdataout.Close();
+                }
                 if (Globals.text_out != null)
                 {
                     Globals.text_out.Flush();

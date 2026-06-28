@@ -142,6 +142,81 @@ namespace L2_login
             return System.Int32.MaxValue;
         }
 
+        static public int SummonDistanceToTarget(uint targetId)
+        {
+            float sx, sy, sz;
+
+            if (Globals.gamedata.my_pet.ID != 0)
+            {
+                sx = Globals.gamedata.my_pet.X;
+                sy = Globals.gamedata.my_pet.Y;
+                sz = Globals.gamedata.my_pet.Z;
+            }
+            else if (Globals.gamedata.my_pet1.ID != 0)
+            {
+                sx = Globals.gamedata.my_pet1.X;
+                sy = Globals.gamedata.my_pet1.Y;
+                sz = Globals.gamedata.my_pet1.Z;
+            }
+            else if (Globals.gamedata.my_pet2.ID != 0)
+            {
+                sx = Globals.gamedata.my_pet2.X;
+                sy = Globals.gamedata.my_pet2.Y;
+                sz = Globals.gamedata.my_pet2.Z;
+            }
+            else if (Globals.gamedata.my_pet3.ID != 0)
+            {
+                sx = Globals.gamedata.my_pet3.X;
+                sy = Globals.gamedata.my_pet3.Y;
+                sz = Globals.gamedata.my_pet3.Z;
+            }
+            else
+            {
+                //no active summon
+                return System.Int32.MaxValue;
+            }
+
+            TargetType type = GetType(targetId);
+
+            switch (type)
+            {
+                case TargetType.PLAYER:
+                    Globals.PlayerLock.EnterReadLock();
+                    try
+                    {
+                        CharInfo player = GetChar(targetId);
+
+                        if (player != null)
+                        {
+                            return Distance(sx, sy, sz, player.X, player.Y, player.Z);
+                        }
+                    }
+                    finally
+                    {
+                        Globals.PlayerLock.ExitReadLock();
+                    }
+                    break;
+                case TargetType.NPC:
+                    Globals.NPCLock.EnterReadLock();
+                    try
+                    {
+                        NPCInfo npc = GetNPC(targetId);
+
+                        if (npc != null)
+                        {
+                            return Distance(sx, sy, sz, npc.X, npc.Y, npc.Z);
+                        }
+                    }
+                    finally
+                    {
+                        Globals.NPCLock.ExitReadLock();
+                    }
+                    break;
+            }
+
+            return System.Int32.MaxValue;
+        }
+
         static public int Distance(uint id, TargetType type)
         {
             //no locks needed... since the calling function has the locks in it

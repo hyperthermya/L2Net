@@ -51,7 +51,7 @@ namespace L2_login
         public const string Name = "L2.Net";
         public const string Version = "June 2026";
         public const string Runtime = ".NET 10 (migrated from .NET Framework)";
-        public const string VersionLetter = "https://github.com/devmvalvm/L2Net";
+        public const string VersionLetter = "https://github.com/hyperthermya/L2Net";
         public const int MinDataPack = 392;
         public static string PATH = "";
         public const string SOUND_NAMESPACE = "L2_login.Sounds.";
@@ -227,11 +227,15 @@ namespace L2_login
 
         public static StreamWriter text_out;
 
-#if DEBUG
         public static StreamWriter gamedataout;
         public static StreamWriter gamedatato;
         public static StreamWriter clientdataout;
         public static StreamWriter clientdatato;
+
+#if DEBUG
+        public static bool DebugPacketLog = true;
+#else
+        public static bool DebugPacketLog = false;
 #endif
 
         public static Login login_window;
@@ -508,6 +512,8 @@ namespace L2_login
         public static System.Drawing.SolidBrush Trade_Brush = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(234, 162, 245));
         public static System.Drawing.SolidBrush Ally_Brush = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(119, 251, 153));
         public static System.Drawing.SolidBrush Announcement_Brush = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(127, 249, 253));
+        public static System.Drawing.SolidBrush Hero_Brush = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(0, 200, 205));
+        public static System.Drawing.SolidBrush CommandChannel_Brush = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(255, 174, 199));
 
         //option stuff
         private static string _ProductKey = "LOVELKQKMGBOGNET";

@@ -2811,7 +2811,21 @@ namespace L2_login
 
                 string name = cmd.Substring(var_start + 2, var_end - var_start - 2);
 
-                string nname = Get_String_Internal(name);
+                //optional trailing precision modifier, e.g. <&MY_DOUBLE I2&> formats a DOUBLE with 2 decimal places
+                string varName = name;
+                int precision = -1;
+                int mod_idx = name.LastIndexOf(' ');
+                if (mod_idx != -1)
+                {
+                    string modifier = name.Substring(mod_idx + 1);
+                    if (modifier.Length > 1 && (modifier[0] == 'I' || modifier[0] == 'i') && int.TryParse(modifier.Substring(1), out int parsedPrecision))
+                    {
+                        varName = name.Substring(0, mod_idx);
+                        precision = parsedPrecision;
+                    }
+                }
+
+                string nname = Get_String_Internal(varName);
                 ScriptVariable scr_var = Get_Var(nname);
 
                 string value = "";
@@ -2822,7 +2836,9 @@ namespace L2_login
                         value = Convert.ToInt64(scr_var.Value).ToString(System.Globalization.CultureInfo.InvariantCulture);
                         break;
                     case Var_Types.DOUBLE:
-                        value = Convert.ToDouble(scr_var.Value).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                        value = precision >= 0
+                            ? Convert.ToDouble(scr_var.Value).ToString("F" + precision, System.Globalization.CultureInfo.InvariantCulture)
+                            : Convert.ToDouble(scr_var.Value).ToString(System.Globalization.CultureInfo.InvariantCulture);
                         break;
                     case Var_Types.STRING:
                         value = Convert.ToString(scr_var.Value);

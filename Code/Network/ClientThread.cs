@@ -97,24 +97,24 @@ namespace L2_login
                                  Globals.pck_thread.mine_queue.Enqueue(pck_dat);
                             // }
                          }*/
-#if DEBUG
-
-                        //need to output to the send to client log file
-                        Globals.clientdatato.WriteLine(":::time:::" + DateTime.Now.TimeOfDay.ToString() + ":::");
-                        Globals.clientdatato.WriteLine("-data from bot to client hex-");
-                        for (uint i = 0; i < buff.Length; i++)
+                        if (Globals.DebugPacketLog)
                         {
-                            Globals.clientdatato.Write(buff[i].ToString("X2"));
-                            Globals.clientdatato.Write(" ");
+                            //need to output to the send to client log file
+                            Globals.clientdatato.WriteLine(":::time:::" + DateTime.Now.TimeOfDay.ToString() + ":::");
+                            Globals.clientdatato.WriteLine("-data from bot to client hex-");
+                            for (uint i = 0; i < buff.Length; i++)
+                            {
+                                Globals.clientdatato.Write(buff[i].ToString("X2"));
+                                Globals.clientdatato.Write(" ");
+                            }
+                            Globals.clientdatato.WriteLine("");
+                            Globals.clientdatato.WriteLine("-data from bot to client string-");
+                            for (uint i = 0; i < buff.Length; i++)
+                            {
+                                Globals.clientdatato.Write((char)buff[i]);
+                            }
+                            Globals.clientdatato.WriteLine("");
                         }
-                        Globals.clientdatato.WriteLine("");
-                        Globals.clientdatato.WriteLine("-data from bot to client string-");
-                        for (uint i = 0; i < buff.Length; i++)
-                        {
-                            Globals.clientdatato.Write((char)buff[i]);
-                        }
-                        Globals.clientdatato.WriteLine("");
-#endif
 
                         Globals.gamedata.crypt_clientout.encrypt(buff);
 
@@ -197,42 +197,30 @@ namespace L2_login
                             Globals.pck_thread.mine_queue.Enqueue(pck_dat);
 
                         }
-#if DEBUG
-                        try
+                        if (Globals.DebugPacketLog)
                         {
-                            //
-                            /* if (Globals.pck_thread.pck_recording)
-                              {
-                             // *                             lock (Globals.pck_thread.lock_obj)
-                             // {
-                                  pck_window_dat pck_dat = new pck_window_dat(buffpacket);
-                                  pck_dat.action = 1;
-                                  pck_dat.type = 1;
-                                  pck_dat.time = System.DateTime.Now.TimeOfDay.ToString();
-                                  Globals.pck_thread.mine_queue.Enqueue(pck_dat);
-                              //* }
-                              }*/
-                            //
-                            Globals.clientdataout.WriteLine("packet...-size: " + size.ToString() + " -count:" + cnt.ToString() + " :::time:::" + DateTime.Now.TimeOfDay.ToString() + ":::");
-                            Globals.clientdataout.WriteLine("-data from client to bot hex-");
-                            for (uint i = 0; i < size - 2; i++)
+                            try
                             {
-                                Globals.clientdataout.Write(buffpacket[i].ToString("X2"));
-                                Globals.clientdataout.Write(" ");
+                                Globals.clientdataout.WriteLine("packet...-size: " + size.ToString() + " -count:" + cnt.ToString() + " :::time:::" + DateTime.Now.TimeOfDay.ToString() + ":::");
+                                Globals.clientdataout.WriteLine("-data from client to bot hex-");
+                                for (uint i = 0; i < size - 2; i++)
+                                {
+                                    Globals.clientdataout.Write(buffpacket[i].ToString("X2"));
+                                    Globals.clientdataout.Write(" ");
+                                }
+                                Globals.clientdataout.WriteLine("");
+                                Globals.clientdataout.WriteLine("-data from client to bot string-");
+                                for (uint i = 0; i < size - 2; i++)
+                                {
+                                    Globals.clientdataout.Write((char)buffpacket[i]);
+                                }
+                                Globals.clientdataout.WriteLine("");
                             }
-                            Globals.clientdataout.WriteLine("");
-                            Globals.clientdataout.WriteLine("-data from client to bot string-");
-                            for (uint i = 0; i < size - 2; i++)
+                            catch
                             {
-                                Globals.clientdataout.Write((char)buffpacket[i]);
+                                //failed to write... oh well
                             }
-                            Globals.clientdataout.WriteLine("");
                         }
-                        catch
-                        {
-                            //failed to write... oh well
-                        }
-#endif
 
                         if (Globals.DumpModeClient)
                         {

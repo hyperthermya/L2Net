@@ -1275,6 +1275,12 @@ namespace L2_login
                 case "ACTIVEFOLLOW_DISTANCE":
                     Globals.gamedata.botoptions.ActiveFollowDistance = Util.GetInt32(Get_String(ref line));
                     break;
+                case "ACTIVEFOLLOW_DISTANCE2":
+                    Globals.gamedata.botoptions.ActiveFollowDistance2 = Util.GetInt32(Get_String(ref line));
+                    break;
+                case "SUMMON_ATTACK_RANGE":
+                    Globals.gamedata.botoptions.SummonAttackRange = Util.GetInt32(Get_String(ref line));
+                    break;
                 case "CLEAR_ITEMS":
                     Globals.ItemListLock.EnterWriteLock();
                     try

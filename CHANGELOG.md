@@ -2,6 +2,20 @@
 
 Full historical changelog, moved out of [README.md](README.md) to keep it readable. Newest entries are at the top.
 
+# 2026-06-28
+* Fix: title bar / About window / Help links pointed to the old `devmvalvm/L2Net` repo instead of this fork (`hyperthermya/L2Net`).
+* Fix: `logs\` folder was never created automatically, causing chat logging and packet debug logging to silently fail to start.
+* Removed `Microsoft.Windows.Compatibility` (and the vulnerable transitive `System.Data.SqlClient` dependency, NU1902/NU1903) — replaced with the lightweight `System.Data.Odbc` package, the only piece of it actually used (`TEST_ODBC` script command).
+* Add: chat color for the Command Channel (previously fell back to the default/no-color case).
+* Add: `-debug`/`--debug` command line switch to enable packet-dump logging without needing a Debug build.
+* Add: `<&VAR I2&>` (or any `I<n>`) precision modifier for `DOUBLE` variables in script text substitution.
+* Add: `TARGETER_CLAN_ID`/`TARGETER_ALLY_ID`/`TARGETER_PVPFLAG`/`TARGETER_KARMA` script variables on self-targeted events.
+* Add: `SKILL_SUCCESS` script variable on `SkillLaunched`/`OtherSkillLaunched` events.
+* Fix: `PARTY_INVITE`/`TRADE_INVITE` script events existed but were never actually fired — now raised from the real party/trade invite packets.
+* Fix: pet/summon attack assist no longer spams the attack action when no pet/summon is actually out.
+* Add: summon attack range option (`SET SUMMON_ATTACK_RANGE`) — summon assist now respects distance to target.
+* Add: separate follow distance for "L2.Net style" active follow (`SET ACTIVEFOLLOW_DISTANCE2`), independent from the walker-style distance.
+
 # 2018 Changelog
 Compiled program is ready to be used in L2Net_June3_2018.7z
 

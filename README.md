@@ -19,7 +19,7 @@ This program comes with no warranty expressed or implied.
 Any concerns about copyright or other challenges can be messaged to the open source contributor for review and removal.
 
 ## Status (June 2026)
-The project has been migrated from .NET Framework / SlimDX to **.NET 10** (Windows Forms, GDI+ map renderer). SlimDX is no longer a dependency. See [CHANGELOG.md](CHANGELOG.md) for the full history.
+The project has been migrated from .NET Framework / SlimDX to **.NET 10** (Windows Forms, GDI+ map renderer). SlimDX is no longer a dependency, and so is `Microsoft.Windows.Compatibility` (no more `System.Data.SqlClient` vulnerability warnings). See [CHANGELOG.md](CHANGELOG.md) for the full history, including the 2026-06-28 round of bot-logic/scripting fixes (summon assist range, follow distance, party/trade invite events, debug packet logging, etc.).
 
 ## Requirements
 * Windows 10/11

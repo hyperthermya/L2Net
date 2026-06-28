@@ -1,7 +1,6 @@
 
 Add > < in combat tab
 Fix summon heal etc
-Add summon attack range
 
 * TODO - stand to use skills
 * TODO - fix allowing movement while dead
@@ -9,40 +8,68 @@ Add summon attack range
 * TODO - self/target - like dead, sitting, running, armor, weapon...etc
 * TODO - protected / static class functions
 * TODO - fix all non-thread safe variables
-* TODO - allow setting L2.Net follow distance 2
 * TODO - set walls via bot options
-* TODO - command channel pink
 * TODO - party info summon
-* TODO - debug output with command line param
-* TODO - on self targeted -targeter clan, ally
 * TODO - add script events for enter/leave peace zone
 * TODO - event MEMBER_JOIN_PARTY?
 * TODO - event MEMBER_LEFT_PARTY?
-* TODO - skill successful/failed for skill launched events?
 * TODO - delayed party invite reject
 * TODO - delayed trade invite reject
-* TODO - "<&DOUBLE I2&>" set precision
-* TODO - add flagged state to targeting and combat events
-* TODO - script targeting ... TARGETTED, TARGETING, IGNORE
 * TODO - Util.GetCharName - check clan members
 * TODO - Util.GetCharID - check clan members
 * TODO - fix forward exit packet on close
-* TODO - 0x12 = GM Announcement - Light Blue use hero color
-* TODO - make hero chat color a little darker
 
 * TODO - summoned/spawned - spawned last forever.
 * TODO - on dead delay of 15 seconds.
 * TODO - added x,y map viewport offset to map tab
-* TODO - script event PARTY_INVITE
-* TODO - script event TRADE_INVITE
 
 * TODO - fix needlessly reusing items when bot options are applied
-
--add check for summon before spamming attack packet
 
 -Fix 6815 - Deadly Poison for GUI
 
 DV/LOA, need higher level
+
+== DONE ==
+
+* TODO - command channel pink
+(Globals.CommandChannel_Brush, case 0x13 in ClientPackets.cs TargetSelected/chat switch)
+
+* TODO - make hero chat color a little darker
+(Globals.Hero_Brush replaces Globals.Cyan for chat type 0x11)
+
+* TODO - 0x12 = GM Announcement - Light Blue use hero color
+(case 0x12 now uses Globals.Hero_Brush)
+
+* TODO - debug output with command line param
+(Globals.DebugPacketLog runtime flag, enabled via -debug/--debug arg in GameServer.Init; replaces #if DEBUG around the gamedataout/gamedatato/clientdataout/clientdatato packet dump logs)
+
+* TODO - "<&DOUBLE I2&>" set precision
+(ScriptEngineThread.Get_String_Internal: trailing "I<n>" modifier on a <&VAR&> tag formats a DOUBLE with n decimal places)
+
+* TODO - on self targeted -targeter clan, ally
+(TARGETER_CLAN_ID / TARGETER_ALLY_ID added to SelfTargeted/SelfUnTargeted script events)
+
+* TODO - add flagged state to targeting and combat events
+(TARGETER_PVPFLAG / TARGETER_KARMA added to SelfTargeted/SelfUnTargeted; SKILL_SUCCESS added to SkillLaunched/OtherSkillLaunched)
+
+* TODO - skill successful/failed for skill launched events?
+(SKILL_SUCCESS variable added to SkillLaunched/OtherSkillLaunched events, derived from TARGET_HIT)
+
+* TODO - script targeting ... TARGETTED, TARGETING, IGNORE
+(already implemented pre-existing: BotOptions.Target_TARGETTED/TARGETING/IGNORE, settable from scripts via SET in Script_Handlers_L2.cs)
+
+* TODO - script event PARTY_INVITE
+* TODO - script event TRADE_INVITE
+(EventType.PartyInvite/TradeInvite now actually fired in ClientPackets.RequestJoinParty/TradeRequest, with INVITER_NAME/LOOT_STYLE and INVITER_ID/INVITER_NAME variables; the enum values already existed but were never raised)
+
+-add check for summon before spamming attack packet
+(PetAssist now requires Globals.gamedata.my_pet.ID != 0; SummonAssist now requires Util.HasActiveSummon(), in both spots in BotAIThread.cs)
+
+Add summon attack range
+(BotOptions.SummonAttackRange, script-settable via SET SUMMON_ATTACK_RANGE; gates the Summon_Attack action via new Util.SummonDistanceToTarget())
+
+* TODO - allow setting L2.Net follow distance 2
+(BotOptions.ActiveFollowDistance2, script-settable via SET ACTIVEFOLLOW_DISTANCE2; used instead of ActiveFollowDistance when ActiveFollowStyle == 0 (l2.net style) in BotAIThread.ActiveFollow())
 
 public enum AbnormalEffects : uint
 

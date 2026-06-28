@@ -1120,10 +1120,13 @@ namespace L2_login
                     Globals.l2net_home.Add_Text(message, Globals.Yellow, TextType.PARTY);
                     break;
                 case 0x11://hero
-                    Globals.l2net_home.Add_Text(message, Globals.Cyan, TextType.HERO);
+                    Globals.l2net_home.Add_Text(message, Globals.Hero_Brush, TextType.HERO);
                     break;
-                case 0x12://Announcement 2
-                    Globals.l2net_home.Add_Text(message, Globals.Announcement_Brush, TextType.SYSTEM);
+                case 0x12://Announcement 2 / GM Announcement
+                    Globals.l2net_home.Add_Text(message, Globals.Hero_Brush, TextType.SYSTEM);
+                    break;
+                case 0x13://command channel
+                    Globals.l2net_home.Add_Text(message, Globals.CommandChannel_Brush, TextType.PARTY);
                     break;
                 case 0x14://territory battle
                     Globals.l2net_home.Add_Text(message, Globals.Gold, TextType.SYSTEM);
@@ -1225,6 +1228,15 @@ namespace L2_login
 
             uint data1 = buffe.ReadUInt32();//party loot style
 
+            if (Globals.gamedata.CurrentScriptState == ScriptState.Running)
+            {
+                ScriptEvent sc_ev = new ScriptEvent();
+                sc_ev.Type = EventType.PartyInvite;
+                sc_ev.Variables.Add(new ScriptVariable(tmp, "INVITER_NAME", Var_Types.STRING, Var_State.PUBLIC));
+                sc_ev.Variables.Add(new ScriptVariable((long)data1, "LOOT_STYLE", Var_Types.INT, Var_State.PUBLIC));
+                ScriptEngine.SendToEventQueue(sc_ev);
+            }
+
             foreach (CharInfo player in Globals.gamedata.nearby_chars.Values)
             {
                 if (player.Name == tmp && player.ClanID == Globals.gamedata.my_char.ClanID && Globals.gamedata.botoptions.AcceptPartyClan == 1 && sent == 0)
@@ -1264,6 +1276,15 @@ namespace L2_login
         public static void TradeRequest(ByteBuffer buffe)
         {
             uint data1 = buffe.ReadUInt32();
+
+            if (Globals.gamedata.CurrentScriptState == ScriptState.Running)
+            {
+                ScriptEvent sc_ev = new ScriptEvent();
+                sc_ev.Type = EventType.TradeInvite;
+                sc_ev.Variables.Add(new ScriptVariable((long)data1, "INVITER_ID", Var_Types.INT, Var_State.PUBLIC));
+                sc_ev.Variables.Add(new ScriptVariable(Util.GetCharName(data1), "INVITER_NAME", Var_Types.STRING, Var_State.PUBLIC));
+                ScriptEngine.SendToEventQueue(sc_ev);
+            }
 
             Globals.l2net_home.Set_YesNo(Util.GetCharName(data1) + " would like to trade." + Environment.NewLine + "Do you accept?");
 
@@ -2838,6 +2859,7 @@ namespace L2_login
                     sc_ev.Variables.Add(new ScriptVariable((long)_skillID, "SKILL_ID", Var_Types.INT, Var_State.PUBLIC));
                     sc_ev.Variables.Add(new ScriptVariable((long)_skillLevel, "SKILL_LEVEL", Var_Types.INT, Var_State.PUBLIC));
                     sc_ev.Variables.Add(new ScriptVariable((long)_targetshit, "TARGET_HIT", Var_Types.INT, Var_State.PUBLIC));
+                    sc_ev.Variables.Add(new ScriptVariable(_targetshit > 0 ? 1L : 0L, "SKILL_SUCCESS", Var_Types.INT, Var_State.PUBLIC));
                     ScriptEngine.SendToEventQueue(sc_ev);
                 }
 
@@ -2869,6 +2891,7 @@ namespace L2_login
                     sc_ev.Variables.Add(new ScriptVariable((long)_skillID, "SKILL_ID", Var_Types.INT, Var_State.PUBLIC));
                     sc_ev.Variables.Add(new ScriptVariable((long)_skillLevel, "SKILL_LEVEL", Var_Types.INT, Var_State.PUBLIC));
                     sc_ev.Variables.Add(new ScriptVariable((long)_targetshit, "TARGET_HIT", Var_Types.INT, Var_State.PUBLIC));
+                    sc_ev.Variables.Add(new ScriptVariable(_targetshit > 0 ? 1L : 0L, "SKILL_SUCCESS", Var_Types.INT, Var_State.PUBLIC));
                     ScriptEngine.SendToEventQueue(sc_ev);
                 }
 
@@ -3192,6 +3215,10 @@ namespace L2_login
             int _z = 0;
             string _targeter_name = "";
             int _targeter_war = 0;
+            uint _targeter_clan = 0;
+            uint _targeter_ally = 0;
+            uint _targeter_pvpflag = 0;
+            int _targeter_karma = 0;
 
             bool targeter_is_player = true;
 
@@ -3445,6 +3472,10 @@ namespace L2_login
                                     player.CurrentTargetType = TargetType.NONE;
                                     _targeter_name = player.Name;
                                     _targeter_war = player.WarState;
+                                    _targeter_clan = player.ClanID;
+                                    _targeter_ally = player.AllyID;
+                                    _targeter_pvpflag = player.PvPFlag;
+                                    _targeter_karma = player.Karma;
                                 }
                             }
                             finally
@@ -3498,6 +3529,10 @@ namespace L2_login
                         sc_ev.Variables.Add(new ScriptVariable(targeter_is_player ? 1L : 0L, "TARGETER_IS_PLAYER", Var_Types.INT, Var_State.PUBLIC));
                         sc_ev.Variables.Add(new ScriptVariable(_targeter_name, "TARGETER_NAME", Var_Types.STRING, Var_State.PUBLIC));
                         sc_ev.Variables.Add(new ScriptVariable((long)_targeter_war, "TARGETER_WARSTATE", Var_Types.INT, Var_State.PUBLIC));
+                        sc_ev.Variables.Add(new ScriptVariable((long)_targeter_clan, "TARGETER_CLAN_ID", Var_Types.INT, Var_State.PUBLIC));
+                        sc_ev.Variables.Add(new ScriptVariable((long)_targeter_ally, "TARGETER_ALLY_ID", Var_Types.INT, Var_State.PUBLIC));
+                        sc_ev.Variables.Add(new ScriptVariable((long)_targeter_pvpflag, "TARGETER_PVPFLAG", Var_Types.INT, Var_State.PUBLIC));
+                        sc_ev.Variables.Add(new ScriptVariable((long)_targeter_karma, "TARGETER_KARMA", Var_Types.INT, Var_State.PUBLIC));
                         ScriptEngine.SendToEventQueue(sc_ev);
                     }
                 }
